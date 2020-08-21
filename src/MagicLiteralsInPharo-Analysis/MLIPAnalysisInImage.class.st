@@ -16,6 +16,13 @@ MLIPAnalysisInImage >> allLiterals [
 	^methods flatCollect: #literalCandidates
 ]
 
+{ #category : #outputting }
+MLIPAnalysisInImage >> csvTestVsCode [
+	^String streamContents:  [ :stream |
+		self printTestVsCodeOn: stream separatedBy: ';'
+	].
+]
+
 { #category : #running }
 MLIPAnalysisInImage >> filterSample: methodsSample [
 	^methodsSample select: [ :meth |
@@ -33,23 +40,11 @@ MLIPAnalysisInImage >> initialize [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #outputting }
 MLIPAnalysisInImage >> latexTestVsCode [
 	^String streamContents:  [ :stream |
-		self testVsCodeDistribution do: [ :values ||test testPercent notTest|
-			test := values first.
-			notTest:= values second.
-			testPercent := (test / (test + notTest)) asFloat * 100.
-			stream
-				nextPutAll: (test asString) ;
-				nextPutAll: ' & '.
-			testPercent printOn: stream showingDecimalPlaces: 1.
-			stream
-				nextPutAll: ' & ' ;
-				nextPutAll: (notTest asString) ;
-				cr.
-			].
-		]
+		self printTestVsCodeOn: stream separatedBy: ' & '
+	].
 ]
 
 { #category : #accessing }
@@ -86,14 +81,57 @@ MLIPAnalysisInImage >> onSample: aCollectionOfMethods [
 	methods := self filterSample: aCollectionOfMethods 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #outputting }
+MLIPAnalysisInImage >> printTestVsCodeOn: stream separatedBy: stringSeparator [
+	| grandTotal |
+	grandTotal := 0.
+	self testVsCodeDistribution do: [ :values |
+		grandTotal := grandTotal + (values at: #totalType).
+		stream
+			nextPutAll: ((values at: #totalType) asString) ;
+			nextPutAll: stringSeparator.
+			(values at: #percentType) printOn: stream showingDecimalPlaces: 1.
+			stream
+				nextPutAll: stringSeparator ;
+				nextPutAll: ((values at: #nbTest) asString) ;
+				nextPutAll: stringSeparator.
+			(values at: #percentTest) printOn: stream showingDecimalPlaces: 1.
+			stream
+				nextPutAll: stringSeparator ;
+				nextPutAll: ((values at: #nbNotTest) asString) ;
+				cr.
+			].
+		stream
+			nextPutAll: (grandTotal asString) ;
+			nextPutAll: stringSeparator ;
+			nextPutAll: stringSeparator ;
+			nextPutAll: stringSeparator ;
+			nextPutAll: stringSeparator ;
+			cr
+
+]
+
+{ #category : #statistics }
 MLIPAnalysisInImage >> testVsCodeDistribution [
-	^self literalsTypes collect: [ :lType |
-		self testVsCodeFor: lType
+	| allResults grandTotal |
+	grandTotal := 0.
+	allResults := self literalsTypes collect: [ :lType || result |
+		result := self testVsCodeFor: lType.
+		grandTotal := grandTotal + result sum.
+		result
+	].
+	^allResults collect: [:res ||return|
+		return := SmallDictionary new: 5.
+		return at: #totalType put: res sum.
+		return at: #nbTest put: res first .
+		return at: #nbNotTest put: res second.
+		return at: #percentType put: ((return at: #totalType) / grandTotal) asFloat * 100 .
+		return at: #percentTest put: (res first / (return at: #totalType)) asFloat * 100 .
+		return
 	]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #statistics }
 MLIPAnalysisInImage >> testVsCodeFor: aLiteralType [
 	| test notTest |
 	test := 0.
