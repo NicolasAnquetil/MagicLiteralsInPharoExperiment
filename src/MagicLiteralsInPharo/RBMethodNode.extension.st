@@ -3,21 +3,21 @@ Extension { #name : #RBMethodNode }
 { #category : #'*MagicLiteralsInPharo' }
 RBMethodNode >> isMethodReturningLiteral [
 	^ TreeQuery breadthFirst
-		checkMatch;
+		matchAnywhere;
 		predicate: self mlipMethodReturningLiteralPredicate;
-		runOn: self childrenBlock: [ :n | 
+		runOn: self
+			childrenBlock: [ :n | 
 			n isMethod
 				ifTrue: [ n arguments , {n body} ]
-				ifFalse: [ n children ] ].
-	
+				ifFalse: [ n children ] ]
 ]
 
 { #category : #'*MagicLiteralsInPharo' }
 RBMethodNode >> isMethodReturningPoint [
 	^ TreeQuery breadthFirst
-		checkMatch;
-		predicate: (self mlipMethodReturningPointPredicate);
-		runOn: self childrenBlock: #children.
+		matchAnywhere;
+		predicate: self mlipMethodReturningPointPredicate;
+		runOn: self childrenBlock: #children
 ]
 
 { #category : #'*MagicLiteralsInPharo' }

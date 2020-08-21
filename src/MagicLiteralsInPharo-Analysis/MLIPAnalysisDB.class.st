@@ -1,5 +1,5 @@
 Class {
-	#name : #MLIPAnalysis,
+	#name : #MLIPAnalysisDB,
 	#superclass : #Object,
 	#instVars : [
 		'databaseFile',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #computation }
-MLIPAnalysis >> allLiteralNodes [
+MLIPAnalysisDB >> allLiteralNodes [
 	^ self databaseFile sqlite3ConnectionDo: [ :connection |
 		Array streamContents: [ :literalsStream |
 			(connection execute: 'SELECT method.id, method.source_code , class.is_test_case FROM method, class WHERE method.class_id = class.id;') do: [ :row |
@@ -23,41 +23,41 @@ MLIPAnalysis >> allLiteralNodes [
 ]
 
 { #category : #computation }
-MLIPAnalysis >> allLiteralNodesNotInLiteralArray [
+MLIPAnalysisDB >> allLiteralNodesNotInLiteralArray [
 	^ self allLiteralNodes reject: [ :node | node parent class = RBLiteralArrayNode ]
 ]
 
 { #category : #computation }
-MLIPAnalysis >> allLiteralNodesNotInLiteralArrayGroupedByType [
+MLIPAnalysisDB >> allLiteralNodesNotInLiteralArrayGroupedByType [
 	^ allLiteralNodesNotInLiteralArrayGroupedByType ifNil: [
 		allLiteralNodesNotInLiteralArrayGroupedByType := self allLiteralNodesNotInLiteralArray groupedBy: [ :n |
 		self typeAggregationDict at: n value class ] ]
 ]
 
 { #category : #computation }
-MLIPAnalysis >> allLiteralNodesNotInLiteralArrayNorInTest [
+MLIPAnalysisDB >> allLiteralNodesNotInLiteralArrayNorInTest [
 	^ self allLiteralNodesNotInLiteralArray
 		reject: [ :node | (node parents first propertyAt: #isFromTestCase) ]
 ]
 
 { #category : #computation }
-MLIPAnalysis >> allLiteralNodesNotInLiteralArrayNorInTestGroupedByType [
+MLIPAnalysisDB >> allLiteralNodesNotInLiteralArrayNorInTestGroupedByType [
 	^ self allLiteralNodesNotInLiteralArrayNorInTest groupedBy: [ :n |
 		self typeAggregationDict at: n value class ]
 ]
 
 { #category : #accessing }
-MLIPAnalysis >> databaseFile [
+MLIPAnalysisDB >> databaseFile [
 	^ databaseFile
 ]
 
 { #category : #accessing }
-MLIPAnalysis >> databaseFile: anObject [
+MLIPAnalysisDB >> databaseFile: anObject [
 	databaseFile := anObject
 ]
 
 { #category : #'plot generation' }
-MLIPAnalysis >> generateLatexIn: aDirectory [
+MLIPAnalysisDB >> generateLatexIn: aDirectory [
 	| fileNamesSeen |
 	fileNamesSeen := Set new.
 	(Pragma allNamed: #latexInFileNamed: in: self class) do: [ :pragma |
@@ -71,7 +71,7 @@ MLIPAnalysis >> generateLatexIn: aDirectory [
 ]
 
 { #category : #'plot generation' }
-MLIPAnalysis >> generatePlotsIn: aDirectory [
+MLIPAnalysisDB >> generatePlotsIn: aDirectory [
 	| fileNamesSeen |
 	fileNamesSeen := Set new.
 	(Pragma allNamed: #plotInFileNamed: in: self class) do: [ :pragma |
@@ -85,7 +85,7 @@ MLIPAnalysis >> generatePlotsIn: aDirectory [
 ]
 
 { #category : #computation }
-MLIPAnalysis >> literalsOccurencesInTestsAndNonTests [
+MLIPAnalysisDB >> literalsOccurencesInTestsAndNonTests [
 	| allLiteralNodesNotInLiteralArrayCount |
 	allLiteralNodesNotInLiteralArrayCount := self allLiteralNodesNotInLiteralArray size.
 	^ (self allLiteralNodesNotInLiteralArrayGroupedByType collect: [ :literals | 
@@ -113,7 +113,7 @@ MLIPAnalysis >> literalsOccurencesInTestsAndNonTests [
 ]
 
 { #category : #computation }
-MLIPAnalysis >> literalsOccurencesInTestsAndNonTestsLatexTable [
+MLIPAnalysisDB >> literalsOccurencesInTestsAndNonTestsLatexTable [
 	<latexInFileNamed: 'occurences-tests-nontests.tex'>
 	^ String streamContents: [ :stream |
 		stream nextPutAll: '\begin{tabular}{l||c|c||c|c||' , ((self parentNodeNames collect: [ :name | 'c' ]) joinUsing: '|') , '}'.
@@ -140,7 +140,7 @@ MLIPAnalysis >> literalsOccurencesInTestsAndNonTestsLatexTable [
 ]
 
 { #category : #plotting }
-MLIPAnalysis >> literalsOccurencesInTestsAndNonTestsPlot [
+MLIPAnalysisDB >> literalsOccurencesInTestsAndNonTestsPlot [
 	<plotInFileNamed: 'literals-occurence-tests-nontests.pdf'>
 	| data |
 	data := self literalsOccurencesInTestsAndNonTests.
@@ -156,18 +156,18 @@ MLIPAnalysis >> literalsOccurencesInTestsAndNonTestsPlot [
 ]
 
 { #category : #accessing }
-MLIPAnalysis >> parentNodeClasses [
+MLIPAnalysisDB >> parentNodeClasses [
 	^ { RBAssignmentNode. RBReturnNode. RBSequenceNode. RBPragmaNode. RBArrayNode }
 ]
 
 { #category : #accessing }
-MLIPAnalysis >> parentNodeNames [
+MLIPAnalysisDB >> parentNodeNames [
 	^ (#('Receiver' 'Arg.') , (self parentNodeClasses collect: [ :c | (c name allButFirst: 'RB' size) allButLast: 'Node' size ]))
 			replaceAll: 'Assignment' with: 'Assign.'
 ]
 
 { #category : #computation }
-MLIPAnalysis >> repartitionMagicLiteralsAtClassLevelData [
+MLIPAnalysisDB >> repartitionMagicLiteralsAtClassLevelData [
 	^ self databaseFile sqlite3ConnectionDo: [ :c |
 		(c execute: 'SELECT class.name, COUNT(*) AS methods_with_magic, SUM(literals_metadata.magic_literals_count) AS magic_count
 	FROM method,literals_metadata,class
@@ -183,7 +183,7 @@ MLIPAnalysis >> repartitionMagicLiteralsAtClassLevelData [
 ]
 
 { #category : #plotting }
-MLIPAnalysis >> repartitionMagicLiteralsAtClassLevelPlot [
+MLIPAnalysisDB >> repartitionMagicLiteralsAtClassLevelPlot [
 	"<plotInFileNamed: 'repartition-class-level.pdf'>"
 	| data |
 	data := self repartitionMagicLiteralsAtClassLevelData.
@@ -207,7 +207,7 @@ MLIPAnalysis >> repartitionMagicLiteralsAtClassLevelPlot [
 ]
 
 { #category : #computation }
-MLIPAnalysis >> repartitionMagicLiteralsAtProbablePackageLevelData [
+MLIPAnalysisDB >> repartitionMagicLiteralsAtProbablePackageLevelData [
 	^ self databaseFile sqlite3ConnectionDo: [ :c |
 		(c execute: 'SELECT substr(class.category, 0, instr(class.category, ''-'')) AS probable_package, COUNT(*) AS classes_with_magic, SUM(literals_metadata.magic_literals_count) AS magic_count
 	FROM method,literals_metadata,class
@@ -223,7 +223,7 @@ MLIPAnalysis >> repartitionMagicLiteralsAtProbablePackageLevelData [
 ]
 
 { #category : #plotting }
-MLIPAnalysis >> repartitionMagicLiteralsAtProbablePackageLevelPlot [
+MLIPAnalysisDB >> repartitionMagicLiteralsAtProbablePackageLevelPlot [
 	"<plotInFileNamed: 'repartition-probable-package-level.pdf'>"
 	| data |
 	data := self repartitionMagicLiteralsAtProbablePackageLevelData.
@@ -244,7 +244,7 @@ MLIPAnalysis >> repartitionMagicLiteralsAtProbablePackageLevelPlot [
 ]
 
 { #category : #accessing }
-MLIPAnalysis >> typeAggregationDict [
+MLIPAnalysisDB >> typeAggregationDict [
 	^ { 
 	SmallInteger -> Integer.
 	ByteString -> String.
