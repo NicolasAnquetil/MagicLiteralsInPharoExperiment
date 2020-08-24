@@ -16,10 +16,72 @@ MLIPAnalysisInImage >> allLiterals [
 	^methods flatCollect: #literalCandidates
 ]
 
+{ #category : #statistics }
+MLIPAnalysisInImage >> astNodeDistribution [
+	| countByParentClass |
+	countByParentClass := Dictionary new.
+	self parentNodeClasses do: [ :c || nb |
+		nb := countByParentClass at: c ifAbsent: [ 0 ].
+		methods do: [ :m |
+			nb := nb +
+				(m literalCandidates count: [ :lit | lit astTypeIs: c ])
+			].
+		countByParentClass at: c put: nb.
+	].
+	^countByParentClass 
+]
+
+{ #category : #outputting }
+MLIPAnalysisInImage >> csvASTNodes [
+	^String streamContents:  [ :stream |
+		| grandTotal distribution |
+		grandTotal := 0.
+		distribution := self astNodeDistribution.
+		distribution do: [ :assoc | grandTotal := grandTotal + assoc value ].
+		self parentNodeClasses with: self parentNodeNames do: [ :class : name |
+			stream
+				nextPutAll: name ; nextPut: $; ;
+				nextPutAll: ((distribution at: class) asString) ; nextPut: $; .
+				((distribution at: class) / grandTotal * 100) printOn: stream showingDecimalPlaces: 1.
+				stream cr.
+		].
+		stream
+			nextPutAll: 'total' ;
+			nextPut: $; ;
+			nextPutAll: (grandTotal asString) ;
+			nextPut: $; ;
+			cr
+	].
+]
+
 { #category : #outputting }
 MLIPAnalysisInImage >> csvTestVsCode [
 	^String streamContents:  [ :stream |
-		self printTestVsCodeOn: stream separatedBy: ';'
+	| grandTotal |
+	grandTotal := 0.
+	self testVsCodeDistribution do: [ :values |
+		grandTotal := grandTotal + (values at: #totalType).
+		stream
+			nextPutAll: ((values at: #totalType) asString) ;
+			nextPut: $; .
+			(values at: #percentType) printOn: stream showingDecimalPlaces: 1.
+			stream
+				nextPut: $; ;
+				nextPutAll: ((values at: #nbTest) asString) ;
+				nextPut: $; .
+			(values at: #percentTest) printOn: stream showingDecimalPlaces: 1.
+			stream
+				nextPut: $; ;
+				nextPutAll: ((values at: #nbNotTest) asString) ;
+				cr.
+			].
+		stream
+			nextPutAll: (grandTotal asString) ;
+			nextPut: $; ;
+			nextPut: $; ;
+			nextPut: $; ;
+			nextPut: $; ;
+			cr
 	].
 ]
 
@@ -40,13 +102,6 @@ MLIPAnalysisInImage >> initialize [
 
 ]
 
-{ #category : #outputting }
-MLIPAnalysisInImage >> latexTestVsCode [
-	^String streamContents:  [ :stream |
-		self printTestVsCodeOn: stream separatedBy: ' & '
-	].
-]
-
 { #category : #accessing }
 MLIPAnalysisInImage >> literalsTypes [
 	^{
@@ -56,8 +111,8 @@ MLIPAnalysisInImage >> literalsTypes [
 	MLIPLiteralTypes forClass: Boolean .
 	MLIPLiteralTypes forClass: Array .
 	MLIPLiteralTypes class: UndefinedObject testSelector: #isNilLiteral .
-	MLIPLiteralTypes forClass: Character .
-	MLIPLiteralTypes forClass: Float
+	MLIPLiteralTypes forClass: Float .
+	MLIPLiteralTypes forClass: Character
 	}
 ]
 
@@ -81,34 +136,17 @@ MLIPAnalysisInImage >> onSample: aCollectionOfMethods [
 	methods := self filterSample: aCollectionOfMethods 
 ]
 
-{ #category : #outputting }
-MLIPAnalysisInImage >> printTestVsCodeOn: stream separatedBy: stringSeparator [
-	| grandTotal |
-	grandTotal := 0.
-	self testVsCodeDistribution do: [ :values |
-		grandTotal := grandTotal + (values at: #totalType).
-		stream
-			nextPutAll: ((values at: #totalType) asString) ;
-			nextPutAll: stringSeparator.
-			(values at: #percentType) printOn: stream showingDecimalPlaces: 1.
-			stream
-				nextPutAll: stringSeparator ;
-				nextPutAll: ((values at: #nbTest) asString) ;
-				nextPutAll: stringSeparator.
-			(values at: #percentTest) printOn: stream showingDecimalPlaces: 1.
-			stream
-				nextPutAll: stringSeparator ;
-				nextPutAll: ((values at: #nbNotTest) asString) ;
-				cr.
-			].
-		stream
-			nextPutAll: (grandTotal asString) ;
-			nextPutAll: stringSeparator ;
-			nextPutAll: stringSeparator ;
-			nextPutAll: stringSeparator ;
-			nextPutAll: stringSeparator ;
-			cr
+{ #category : #accessing }
+MLIPAnalysisInImage >> parentNodeClasses [
+	^ { #receiver . #arg . RBAssignmentNode. RBReturnNode. RBSequenceNode. RBPragmaNode. RBArrayNode }
+]
 
+{ #category : #accessing }
+MLIPAnalysisInImage >> parentNodeNames [
+	^(#('Receiver' 'Arg.') ,
+		((self parentNodeClasses allButFirst: 2)
+			collect: [ :c | (c name allButFirst: 'RB' size) allButLast: 'Node' size ]))
+		replaceAll: 'Assignment' with: 'Assign.'
 ]
 
 { #category : #statistics }
@@ -126,7 +164,10 @@ MLIPAnalysisInImage >> testVsCodeDistribution [
 		return at: #nbTest put: res first .
 		return at: #nbNotTest put: res second.
 		return at: #percentType put: ((return at: #totalType) / grandTotal) asFloat * 100 .
-		return at: #percentTest put: (res first / (return at: #totalType)) asFloat * 100 .
+		return at: #percentTest put: 
+			((return at: #totalType) > 0
+			ifTrue: [ (res first / (return at: #totalType)) asFloat * 100 ]
+			ifFalse: [ -100 ] ).
 		return
 	]
 ]
@@ -138,8 +179,8 @@ MLIPAnalysisInImage >> testVsCodeFor: aLiteralType [
 	notTest := 0.
 	methods do: [ :meth |
 		meth isTestMethod
-			ifTrue: [ test := test + (meth literalsOfType: aLiteralType) size ]
-			ifFalse: [ notTest := notTest + (meth literalsOfType: aLiteralType) size ]
+			ifTrue: [ test := test + (meth literalsOfType: aLiteralType) ]
+			ifFalse: [ notTest := notTest + (meth literalsOfType: aLiteralType) ]
 	].
 	^{test . notTest}
 ]
