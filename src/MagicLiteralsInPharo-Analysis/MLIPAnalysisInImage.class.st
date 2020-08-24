@@ -59,11 +59,11 @@ MLIPAnalysisInImage >> csvTestVsCode [
 	^String streamContents:  [ :stream |
 	| grandTotal |
 	grandTotal := 0.
-	self testVsCodeDistribution do: [ :values |
+	self literalsTypes with: self testVsCodeDistribution do: [ :typ :values |
 		grandTotal := grandTotal + (values at: #totalType).
 		stream
-			nextPutAll: ((values at: #totalType) asString) ;
-			nextPut: $; .
+			nextPutAll: typ literalClass name ; nextPut: $; ;
+			nextPutAll: ((values at: #totalType) asString) ;	nextPut: $; .
 			(values at: #percentType) printOn: stream showingDecimalPlaces: 1.
 			stream
 				nextPut: $; ;
@@ -76,6 +76,7 @@ MLIPAnalysisInImage >> csvTestVsCode [
 				cr.
 			].
 		stream
+			nextPut: $; ;
 			nextPutAll: (grandTotal asString) ;
 			nextPut: $; ;
 			nextPut: $; ;
@@ -106,7 +107,7 @@ MLIPAnalysisInImage >> initialize [
 MLIPAnalysisInImage >> literalsTypes [
 	^{
 	MLIPLiteralTypes forClass: Integer .
-	MLIPLiteralTypes forClass: String .
+	MLIPLiteralTypes class: String testSelector: [:l | l isStringLiteral and: [ l isSymbolLiteral not] ] .
 	MLIPLiteralTypes forClass: Symbol .
 	MLIPLiteralTypes forClass: Boolean .
 	MLIPLiteralTypes forClass: Array .
@@ -117,13 +118,8 @@ MLIPAnalysisInImage >> literalsTypes [
 ]
 
 { #category : #accessing }
-MLIPAnalysisInImage >> methodFilters [
-	^ methodFilters
-]
-
-{ #category : #accessing }
-MLIPAnalysisInImage >> methodFilters: anObject [
-	methodFilters := anObject
+MLIPAnalysisInImage >> methods [ 
+	^methods
 ]
 
 { #category : #statistics }

@@ -23,7 +23,7 @@ MLIPLiteralTypes class >> forClass: aClass [
 
 { #category : #visiting }
 MLIPLiteralTypes >> accept: aLiteralCandidate [
-	^aLiteralCandidate perform: testSelector 
+	^testSelector value: aLiteralCandidate 
 ]
 
 { #category : #accessing }
