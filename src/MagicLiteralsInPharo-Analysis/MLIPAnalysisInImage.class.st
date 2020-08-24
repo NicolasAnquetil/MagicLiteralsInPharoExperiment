@@ -107,7 +107,7 @@ MLIPAnalysisInImage >> initialize [
 MLIPAnalysisInImage >> literalsTypes [
 	^{
 	MLIPLiteralTypes forClass: Integer .
-	MLIPLiteralTypes class: String testSelector: [:l | l isStringLiteral and: [ l isSymbolLiteral not] ] .
+	MLIPLiteralTypes forClass: String .
 	MLIPLiteralTypes forClass: Symbol .
 	MLIPLiteralTypes forClass: Boolean .
 	MLIPLiteralTypes forClass: Array .
