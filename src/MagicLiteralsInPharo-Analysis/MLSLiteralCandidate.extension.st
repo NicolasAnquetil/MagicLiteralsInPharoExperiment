@@ -7,7 +7,13 @@ MLSLiteralCandidate >> astTypeIs: astType [
 	ifTrue: [
 		((astType = #receiver) and: [ self astNode parent receiver = self astNode])
 			ifTrue: [ ^true ].
-		((astType = #arg) and: [ self astNode parent receiver ~= self astNode ])
+		((astType = #keywordArg) and:
+			[ self astNode parent receiver ~= self astNode and: 
+			[self astNode parent isKeyword]])
+			ifTrue: [ ^true ].
+		((astType = #binaryArg) and:
+			[ self astNode parent receiver ~= self astNode and:
+			[self astNode parent isBinary]])
 			ifTrue: [ ^true ].
 	].
 	^false

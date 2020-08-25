@@ -38,18 +38,17 @@ MLIPAnalysisInImage >> csvASTNodes [
 		grandTotal := 0.
 		distribution := self astNodeDistribution.
 		distribution do: [ :assoc | grandTotal := grandTotal + assoc value ].
+
 		self parentNodeClasses with: self parentNodeNames do: [ :class : name |
 			stream
 				nextPutAll: name ; nextPut: $; ;
-				nextPutAll: ((distribution at: class) asString) ; nextPut: $; .
-				((distribution at: class) / grandTotal * 100) printOn: stream showingDecimalPlaces: 1.
-				stream cr.
+				nextPutAll: ((distribution at: class) asString) ;cr.
+				"((distribution at: class) / grandTotal * 100) printOn: stream showingDecimalPlaces: 1."
 		].
 		stream
 			nextPutAll: 'total' ;
 			nextPut: $; ;
 			nextPutAll: (grandTotal asString) ;
-			nextPut: $; ;
 			cr
 	].
 ]
@@ -134,13 +133,15 @@ MLIPAnalysisInImage >> onSample: aCollectionOfMethods [
 
 { #category : #accessing }
 MLIPAnalysisInImage >> parentNodeClasses [
-	^ { #receiver . #arg . RBAssignmentNode. RBReturnNode. RBSequenceNode. RBPragmaNode. RBArrayNode }
+	^ { #receiver . #binaryArg . #keywordArg . RBAssignmentNode. RBReturnNode. RBSequenceNode. RBPragmaNode. RBArrayNode }
 ]
 
 { #category : #accessing }
 MLIPAnalysisInImage >> parentNodeNames [
-	^(#('Receiver' 'Arg.') ,
-		((self parentNodeClasses allButFirst: 2)
+	| manual |
+	manual := #('Receiver' 'Operand' 'Arg.').
+	^(manual ,
+		((self parentNodeClasses allButFirst: manual size)
 			collect: [ :c | (c name allButFirst: 'RB' size) allButLast: 'Node' size ]))
 		replaceAll: 'Assignment' with: 'Assign.'
 ]
