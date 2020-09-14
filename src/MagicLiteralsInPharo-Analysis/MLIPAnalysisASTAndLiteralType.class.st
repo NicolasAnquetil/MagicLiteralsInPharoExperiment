@@ -25,7 +25,7 @@ MLIPAnalysisASTAndLiteralType >> csv [
 		| distribution |
 		distribution := self distribution.
 
-		stream nextPutAll: '        '.
+		stream nextPutAll: '                '.
 		self class literalsTypes do: [ :litTyp |
 			stream
 				nextPut: $; ;
@@ -41,7 +41,7 @@ MLIPAnalysisASTAndLiteralType >> csv [
 				self class literalsTypes do: [ :litTyp |
 					stream
 						nextPut: $; ;
-						nextPutAll: ((classDistrib at: litTyp ifAbsent: [0]) asString)
+						nextPutAll: ((classDistrib at: litTyp literalClass ifAbsent: [0]) asString)
 				].
 				stream cr
 		]
@@ -54,16 +54,16 @@ MLIPAnalysisASTAndLiteralType >> distribution [
 	distrib := Dictionary new: 2.
 	self class parentNodeClasses
 		do: [ :astClass || nb |
-			self class literalsTypes do: [ :litTyp || classDistrib |
+			self class literalsTypes  do: [ :litTyp || classDistrib |
 				classDistrib  := distrib at: astClass ifAbsentPut: [ Dictionary new: 3].
-				nb := classDistrib at: litTyp ifAbsent: [ 0 ].
+				nb := classDistrib at: litTyp literalClass ifAbsent: [ 0 ].
 				methods do: [ :m |
 					nb := nb +
 						(m literalCandidates count: [ :lit |
 							(lit astTypeIs: astClass) and:
 							[ litTyp accept: lit] ])
 				].
-				classDistrib at: litTyp put: nb.
+				classDistrib at: litTyp literalClass put: nb.
 			].
 		].
 	^distrib 
