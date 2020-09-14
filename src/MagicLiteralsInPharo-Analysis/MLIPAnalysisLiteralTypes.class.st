@@ -26,7 +26,7 @@ MLIPAnalysisLiteralTypes >> csv [
 	^String streamContents:  [ :stream || grandTotal |
 		grandTotal := 0.
 		self class literalsTypes
-			with: self testVsCodeDistribution
+			with: self distribution
 			do: [ :typ :values |
 				grandTotal := grandTotal + (values at: #totalType).
 				stream
@@ -45,10 +45,10 @@ MLIPAnalysisLiteralTypes >> csv [
 ]
 
 { #category : #statistics }
-MLIPAnalysisLiteralTypes >> testVsCodeDistribution [
+MLIPAnalysisLiteralTypes >> distribution [
 	| allResults grandTotal |
 	grandTotal := 0.
-	allResults := MLIPAnalysisLiteralTypes literalsTypes collect: [ :lType || result |
+	allResults := self class literalsTypes collect: [ :lType || result |
 		result := self testVsCodeFor: lType.
 		grandTotal := grandTotal + result sum.
 		result

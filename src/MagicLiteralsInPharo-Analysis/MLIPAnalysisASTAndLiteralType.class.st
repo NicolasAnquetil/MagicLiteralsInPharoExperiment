@@ -23,7 +23,7 @@ MLIPAnalysisASTAndLiteralType class >> parentNodeNames [
 MLIPAnalysisASTAndLiteralType >> csv [
 	^String streamContents:  [ :stream |
 		| distribution |
-		distribution := self astNodeDistribution.
+		distribution := self distribution.
 		self class parentNodeClasses
 			with: self class parentNodeNames
 			do: [ :class : name |
@@ -34,4 +34,24 @@ MLIPAnalysisASTAndLiteralType >> csv [
 					cr.
 			]
 	]
+]
+
+{ #category : #outputting }
+MLIPAnalysisASTAndLiteralType >> distribution [
+	| distrib |
+	distrib := Dictionary new.
+	self class parentNodeClasses
+		do: [ :astClass || nb |
+			self class literalsTypes do: [ :litTyp |
+				nb := distrib at: (astClass -> litTyp) ifAbsent: [ 0 ].
+				methods do: [ :m |
+					nb := nb +
+						(m literalCandidates count: [ :lit |
+							(lit astTypeIs: astClass) and:
+							[ litTyp accept: lit] ])
+				].
+				distrib at: (astClass -> litTyp) put: nb.
+			].
+		].
+	^distrib 
 ]

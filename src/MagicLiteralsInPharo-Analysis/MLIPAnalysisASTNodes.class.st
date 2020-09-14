@@ -22,28 +22,12 @@ MLIPAnalysisASTNodes class >> parentNodeNames [
 		replaceAll: 'Assignment' with: 'Assign.'
 ]
 
-{ #category : #statistics }
-MLIPAnalysisASTNodes >> astNodeDistribution [
-	| countByParentClass |
-	countByParentClass := Dictionary new.
-	MLIPAnalysisASTNodes parentNodeClasses
-		do: [ :c || nb |
-			nb := countByParentClass at: c ifAbsent: [ 0 ].
-			methods do: [ :m |
-				nb := nb +
-					(m literalCandidates count: [ :lit | lit astTypeIs: c ])
-				].
-			countByParentClass at: c put: nb.
-		].
-	^countByParentClass 
-]
-
 { #category : #outputting }
 MLIPAnalysisASTNodes >> csv [
 	^String streamContents:  [ :stream |
 		| grandTotal distribution |
 		grandTotal := 0.
-		distribution := self astNodeDistribution.
+		distribution := self distribution.
 		distribution do: [ :assoc | grandTotal := grandTotal + assoc value ].
 
 		self class parentNodeClasses
@@ -61,4 +45,20 @@ MLIPAnalysisASTNodes >> csv [
 			nextPutAll: (grandTotal asString) ;
 			cr
 	].
+]
+
+{ #category : #statistics }
+MLIPAnalysisASTNodes >> distribution [
+	| distrib |
+	distrib := Dictionary new.
+	self class parentNodeClasses
+		do: [ :c || nb |
+			nb := distrib at: c ifAbsent: [ 0 ].
+			methods do: [ :m |
+				nb := nb +
+					(m literalCandidates count: [ :lit | lit astTypeIs: c ])
+				].
+			distrib at: c put: nb.
+		].
+	^distrib 
 ]
