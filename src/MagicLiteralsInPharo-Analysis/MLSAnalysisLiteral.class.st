@@ -24,6 +24,32 @@ MLSAnalysisLiteral class >> fromSerialized: serializedLiteral inMethod: serializ
 		yourself
 ]
 
+{ #category : #testing }
+MLSAnalysisLiteral >> astTypeIs: astType [
+	| parentNode |
+	parentNode := self node parent.
+	(parentNode class = astType) ifTrue: [ ^true ].
+	(parentNode class = RBMessageNode) ifFalse: [ ^ false].
+	"Fine decomposition of all RBMessageNode"
+	((astType = #receiver) and: "receiver of binary message -> operand"
+		[ parentNode receiver = self node and:
+		[ parentNode isBinary not]])
+		ifTrue: [ ^true ].
+	((astType = #binaryArg) and:
+		[ parentNode receiver = self node and:
+		[ parentNode isBinary]])
+		ifTrue: [ ^true ].
+	((astType = #binaryArg) and:
+		[ parentNode receiver ~= self node and:
+		[ parentNode isBinary]])
+		ifTrue: [ ^true ].
+	((astType = #keywordArg) and:
+		[ parentNode receiver ~= self node and: 
+		[ parentNode isKeyword]])
+		ifTrue: [ ^true ].
+	^false
+]
+
 { #category : #accessing }
 MLSAnalysisLiteral >> commentLength [
 	| length |
@@ -79,24 +105,65 @@ MLSAnalysisLiteral >> fromSerialized: serializedLiteral inMethod: serializedMeth
 ]
 
 { #category : #accessing }
+MLSAnalysisLiteral >> idInMethod [
+	"Id of the literal in the method"
+	^mid
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isArrayLiteral [
+	^(self value isArray) or: [ self value class == ByteArray ]
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isBooleanLiteral [
+	^(self value = true) or: [ self value = false ]
+
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isCharacterLiteral [
+	^self value isCharacter
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isFloatLiteral [
+	^(self value isFloat ) or: [ self value class = ScaledDecimal ]
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isIntegerLiteral [
+	^self value isInteger 
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isNilLiteral [
+	^self value isNil
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isStringLiteral [
+	^(self value isString) and: [ self value isSymbol not ]
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isSymbolLiteral [
+	^self value isSymbol
+]
+
+{ #category : #accessing }
 MLSAnalysisLiteral >> method [
 	^ method
 ]
 
 { #category : #accessing }
-MLSAnalysisLiteral >> methodLiterals [
-	^methodLiterals
-]
-
-{ #category : #accessing }
-MLSAnalysisLiteral >> mid [
-	"Id of the literal in the method"
-	^mid
-]
-
-{ #category : #accessing }
 MLSAnalysisLiteral >> node [
 	^node
+]
+
+{ #category : #accessing }
+MLSAnalysisLiteral >> numberLiteralsInMethod [
+	^methodLiterals
 ]
 
 { #category : #printing }

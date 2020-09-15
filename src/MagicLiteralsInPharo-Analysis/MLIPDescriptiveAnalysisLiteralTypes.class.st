@@ -30,7 +30,7 @@ MLIPDescriptiveAnalysisLiteralTypes >> csv [
 			do: [ :typ :values |
 				grandTotal := grandTotal + (values at: #totalType).
 				stream
-					nextPutAll: typ literalClass name ; 					nextPut: $; ;
+					nextPutAll: typ name ; 					nextPut: $; ;
 					nextPutAll: ((values at: #totalType) asString) ;	nextPut: $; ;
 					nextPutAll: ((values at: #nbTest) asString) ; 		nextPut: $; ;
 					nextPutAll: ((values at: #nbNotTest) asString) ;	cr.

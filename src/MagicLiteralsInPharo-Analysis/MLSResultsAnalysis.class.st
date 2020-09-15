@@ -25,6 +25,23 @@ MLSResultsAnalysis class >> importExpertsBase: aName [
 	^self new importExpertsFromFile: aName
 ]
 
+{ #category : #accessing }
+MLSResultsAnalysis >> detectASTNode: aLiteral [
+	MLIPDescriptiveAnalysisASTNodes astNodeClasses
+			with: MLIPDescriptiveAnalysisASTNodes astNodeNames
+			do: [ :class : name |
+				(aLiteral astTypeIs: class)
+				ifTrue: [  ^ name ]
+			].
+	^'unknownASTNode'
+
+]
+
+{ #category : #accessing }
+MLSResultsAnalysis >> detectLiteralKind: aLiteral [ 
+	^(MLIPDescriptiveAnalysisLiteralTypes literalsTypes detect: [ :typ | typ accept: aLiteral ]) name
+]
+
 { #category : #enumerating }
 MLSResultsAnalysis >> do: aBlock [
 	"iterates on all literals"
@@ -85,14 +102,15 @@ MLSResultsAnalysis >> exportToCsvStream: stream withFilter: filterBlock [
 MLSResultsAnalysis >> exportedFields [
 	^{
 		(#literal -> [ :lit | lit value asString]) .
-		(#kind -> [ :lit | (MLSLiteralKind fromMLSLiteral: lit) asString ]) .
+		(#kind -> [ :lit | self detectLiteralKind: lit ]) .
+		(#astNode -> [ :lit | self detectASTNode: lit ]) .
 		(#status -> [ :lit | lit status ]) .
-		(#mid -> [ :lit | lit mid]) .
+		(#idInMethod -> [ :lit | lit idInMethod]) .
 		(#location -> [ :lit | self nodeLocation: lit node]) .
-		(#valueOfConstantMethod -> [ :lit | self valueOfConstantMethod: lit node]) .
+		(#isConstantMethod -> [ :lit | self isConstantMethod: lit node]) .
 		(#method -> [ :lit | lit method name]) .
 		(#commentLength -> [:lit | lit commentLength]) .
-		(#mthodLiterals -> [:lit | lit methodLiterals]) .
+		(#nbLiteralsInMethod -> [:lit | lit numberLiteralsInMethod]) .
 		(#project -> [ :lit | lit project ]) .
 		(#expert -> [ :lit | self expertForProject: lit project experiment: lit experimentId ]) .
 		(#expertise -> [ :lit | self expertiseForProject: lit project experiment: lit experimentId ])
@@ -178,6 +196,14 @@ MLSResultsAnalysis >> initialize [
 ]
 
 { #category : #private }
+MLSResultsAnalysis >> isConstantMethod: aRBNode [
+	^(aRBNode parent class = RBReturnNode) and:
+	[ (aRBNode parent parent class = RBSequenceNode) and:
+	[ (aRBNode parent parent statements size = 1) and:
+	[ aRBNode parent parent parent class = RBMethodNode ] ] ]
+]
+
+{ #category : #private }
 MLSResultsAnalysis >> nodeLocation: aRBNode [
 	^MLSNodeLocationVisitor on: aRBNode
 ]
@@ -190,12 +216,4 @@ MLSResultsAnalysis >> stonToSerializedSample: aStream [
 		next
 			fixStonErrors ;
 			yourself
-]
-
-{ #category : #private }
-MLSResultsAnalysis >> valueOfConstantMethod: aRBNode [
-	^(aRBNode parent class = RBReturnNode) and:
-	[ (aRBNode parent parent class = RBSequenceNode) and:
-	[ (aRBNode parent parent statements size = 1) and:
-	[ aRBNode parent parent parent class = RBMethodNode ] ] ]
 ]

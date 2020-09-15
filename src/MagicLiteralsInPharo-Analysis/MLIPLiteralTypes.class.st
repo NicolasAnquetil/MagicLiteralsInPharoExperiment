@@ -37,6 +37,11 @@ MLIPLiteralTypes >> literalClass: anObject [
 ]
 
 { #category : #accessing }
+MLIPLiteralTypes >> name [ 
+	^self literalClass name
+]
+
+{ #category : #accessing }
 MLIPLiteralTypes >> testSelector [
 	^ testSelector
 ]
