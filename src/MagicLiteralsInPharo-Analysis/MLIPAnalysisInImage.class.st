@@ -8,7 +8,7 @@ Class {
 		'methods',
 		'methodFilters'
 	],
-	#category : #'MagicLiteralsInPharo-Analysis'
+	#category : #'MagicLiteralsInPharo-Analysis-DescriptiveStats'
 }
 
 { #category : #accessing }

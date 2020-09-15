@@ -5,7 +5,7 @@ Class {
 		'literalClass',
 		'testSelector'
 	],
-	#category : #'MagicLiteralsInPharo-Analysis'
+	#category : #'MagicLiteralsInPharo-Analysis-DescriptiveStats'
 }
 
 { #category : #'as yet unclassified' }

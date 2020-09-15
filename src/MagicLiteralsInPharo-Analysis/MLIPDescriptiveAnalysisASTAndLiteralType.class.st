@@ -1,26 +1,26 @@
 Class {
-	#name : #MLIPAnalysisASTAndLiteralType,
+	#name : #MLIPDescriptiveAnalysisASTAndLiteralType,
 	#superclass : #MLIPAnalysisInImage,
-	#category : #'MagicLiteralsInPharo-Analysis'
+	#category : #'MagicLiteralsInPharo-Analysis-DescriptiveStats'
 }
 
 { #category : #accessing }
-MLIPAnalysisASTAndLiteralType class >> literalsTypes [
-	^ MLIPAnalysisLiteralTypes literalsTypes first: 3
+MLIPDescriptiveAnalysisASTAndLiteralType class >> astNodeClasses [
+	^ MLIPDescriptiveAnalysisASTNodes astNodeClasses first: 2
 ]
 
 { #category : #accessing }
-MLIPAnalysisASTAndLiteralType class >> parentNodeClasses [
-	^ MLIPAnalysisASTNodes parentNodeClasses first: 2
+MLIPDescriptiveAnalysisASTAndLiteralType class >> astNodeNames [
+	^ MLIPDescriptiveAnalysisASTNodes astNodeNames first: 2
 ]
 
 { #category : #accessing }
-MLIPAnalysisASTAndLiteralType class >> parentNodeNames [
-	^ MLIPAnalysisASTNodes parentNodeNames first: 2
+MLIPDescriptiveAnalysisASTAndLiteralType class >> literalsTypes [
+	^ MLIPDescriptiveAnalysisLiteralTypes literalsTypes first: 3
 ]
 
 { #category : #outputting }
-MLIPAnalysisASTAndLiteralType >> csv [
+MLIPDescriptiveAnalysisASTAndLiteralType >> csv [
 	^String streamContents:  [ :stream |
 		| distribution |
 		distribution := self distribution.
@@ -33,8 +33,8 @@ MLIPAnalysisASTAndLiteralType >> csv [
 		].
 		stream cr.
 
-		self class parentNodeClasses
-			with: self class parentNodeNames
+		self class astNodeClasses
+			with: self class astNodeNames
 			do: [ :astClass : name || classDistrib |
 				classDistrib := distribution at: astClass.
 				stream nextPutAll: name.
@@ -49,10 +49,10 @@ MLIPAnalysisASTAndLiteralType >> csv [
 ]
 
 { #category : #outputting }
-MLIPAnalysisASTAndLiteralType >> distribution [
+MLIPDescriptiveAnalysisASTAndLiteralType >> distribution [
 	| distrib |
 	distrib := Dictionary new: 2.
-	self class parentNodeClasses
+	self class astNodeClasses
 		do: [ :astClass || nb |
 			self class literalsTypes  do: [ :litTyp || classDistrib |
 				classDistrib  := distrib at: astClass ifAbsentPut: [ Dictionary new: 3].

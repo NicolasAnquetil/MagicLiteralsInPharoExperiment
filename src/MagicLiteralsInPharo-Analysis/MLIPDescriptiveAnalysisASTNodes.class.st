@@ -2,36 +2,36 @@
 Analysis focusing AST Node types
 "
 Class {
-	#name : #MLIPAnalysisASTNodes,
+	#name : #MLIPDescriptiveAnalysisASTNodes,
 	#superclass : #MLIPAnalysisInImage,
-	#category : #'MagicLiteralsInPharo-Analysis'
+	#category : #'MagicLiteralsInPharo-Analysis-DescriptiveStats'
 }
 
 { #category : #accessing }
-MLIPAnalysisASTNodes class >> parentNodeClasses [
+MLIPDescriptiveAnalysisASTNodes class >> astNodeClasses [
 	^ { #binaryArg . #keywordArg . #receiver . RBAssignmentNode. RBReturnNode. RBSequenceNode. RBPragmaNode. RBArrayNode }
 ]
 
 { #category : #accessing }
-MLIPAnalysisASTNodes class >> parentNodeNames [
+MLIPDescriptiveAnalysisASTNodes class >> astNodeNames [
 	| manual |
 	manual := #('Operand' 'Arg.' 'Receiver').
 	^(manual ,
-		((self parentNodeClasses allButFirst: manual size)
+		((self astNodeClasses allButFirst: manual size)
 			collect: [ :c | (c name allButFirst: 'RB' size) allButLast: 'Node' size ]))
 		replaceAll: 'Assignment' with: 'Assign.'
 ]
 
 { #category : #outputting }
-MLIPAnalysisASTNodes >> csv [
+MLIPDescriptiveAnalysisASTNodes >> csv [
 	^String streamContents:  [ :stream |
 		| grandTotal distribution |
 		grandTotal := 0.
 		distribution := self distribution.
 		distribution do: [ :assoc | grandTotal := grandTotal + assoc value ].
 
-		self class parentNodeClasses
-			with: self class parentNodeNames
+		self class astNodeClasses
+			with: self class astNodeNames
 			do: [ :class : name |
 				stream
 					nextPutAll: name ;
@@ -48,10 +48,10 @@ MLIPAnalysisASTNodes >> csv [
 ]
 
 { #category : #statistics }
-MLIPAnalysisASTNodes >> distribution [
+MLIPDescriptiveAnalysisASTNodes >> distribution [
 	| distrib |
 	distrib := Dictionary new.
-	self class parentNodeClasses
+	self class astNodeClasses
 		do: [ :c || nb |
 			nb := distrib at: c ifAbsent: [ 0 ].
 			methods do: [ :m |

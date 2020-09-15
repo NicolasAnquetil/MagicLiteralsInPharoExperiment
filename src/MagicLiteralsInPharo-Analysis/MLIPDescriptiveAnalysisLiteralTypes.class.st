@@ -2,13 +2,13 @@
 Analysis focusing literal types and whether they are in test methods or not
 "
 Class {
-	#name : #MLIPAnalysisLiteralTypes,
+	#name : #MLIPDescriptiveAnalysisLiteralTypes,
 	#superclass : #MLIPAnalysisInImage,
-	#category : #'MagicLiteralsInPharo-Analysis'
+	#category : #'MagicLiteralsInPharo-Analysis-DescriptiveStats'
 }
 
 { #category : #accessing }
-MLIPAnalysisLiteralTypes class >> literalsTypes [
+MLIPDescriptiveAnalysisLiteralTypes class >> literalsTypes [
 	^{
 	MLIPLiteralTypes forClass: Integer .
 	MLIPLiteralTypes forClass: String .
@@ -22,7 +22,7 @@ MLIPAnalysisLiteralTypes class >> literalsTypes [
 ]
 
 { #category : #outputting }
-MLIPAnalysisLiteralTypes >> csv [
+MLIPDescriptiveAnalysisLiteralTypes >> csv [
 	^String streamContents:  [ :stream || grandTotal |
 		grandTotal := 0.
 		self class literalsTypes
@@ -45,7 +45,7 @@ MLIPAnalysisLiteralTypes >> csv [
 ]
 
 { #category : #statistics }
-MLIPAnalysisLiteralTypes >> distribution [
+MLIPDescriptiveAnalysisLiteralTypes >> distribution [
 	| allResults grandTotal |
 	grandTotal := 0.
 	allResults := self class literalsTypes collect: [ :lType || result |
@@ -68,7 +68,7 @@ MLIPAnalysisLiteralTypes >> distribution [
 ]
 
 { #category : #statistics }
-MLIPAnalysisLiteralTypes >> testVsCodeFor: aLiteralType [
+MLIPDescriptiveAnalysisLiteralTypes >> testVsCodeFor: aLiteralType [
 	| test notTest |
 	test := 0.
 	notTest := 0.

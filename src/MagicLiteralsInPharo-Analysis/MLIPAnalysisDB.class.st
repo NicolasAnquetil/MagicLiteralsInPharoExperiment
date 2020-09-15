@@ -5,7 +5,7 @@ Class {
 		'databaseFile',
 		'allLiteralNodesNotInLiteralArrayGroupedByType'
 	],
-	#category : #'MagicLiteralsInPharo-Analysis'
+	#category : #'MagicLiteralsInPharo-Analysis-DescriptiveStats'
 }
 
 { #category : #computation }
