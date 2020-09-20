@@ -9,25 +9,23 @@ MLSResultsAnalysisLiteralType class >> allProjects [
 	^#( 'morphic' 'parser' 'Pharo' 'PolyMath' 'Roassal' 'Seaside' 'VMMaker' )
 ]
 
+{ #category : #accessing }
+MLSResultsAnalysisLiteralType class >> literalsTypes [
+	^ MLIPDescriptiveAnalysisLiteralTypes literalsTypes
+]
+
 { #category : #statistics }
 MLSResultsAnalysisLiteralType >> csv [
 	| distribution |
 	distribution := self distribution.
 	^String streamContents:  [ :stream |
-		stream
-			nextPutAll: '         '.
-		distribution values first keysDo: [ :proj |
-			stream
-				nextPut: $; ;
-				nextPutAll: proj ;
-				nextPut: $;
-		].
-		stream cr.
-		distribution
-			keysAndValuesDo: [ :litTyp :distrib |
+		self csvHeader: stream.
+			self class literalsTypes do: [ :litTyp ||distrib |
+				distrib := distribution at: litTyp name.
 				stream
-					nextPutAll: litTyp.
-				distrib valuesDo: [ :noTestAndTest |
+					nextPutAll: litTyp name.
+				self class allProjects do: [ :proj ||noTestAndTest|
+					noTestAndTest := distrib at: proj ifAbsent: [ #(0 0 ) ].
 					stream
 						nextPut: $; ;
 						nextPutAll: noTestAndTest first asString ;
@@ -38,6 +36,27 @@ MLSResultsAnalysisLiteralType >> csv [
 			].
 		stream
 	]
+]
+
+{ #category : #statistics }
+MLSResultsAnalysisLiteralType >> csvHeader: stream [
+	stream
+		nextPutAll: '         '.
+	self class allProjects do: [ :proj |
+		stream
+			nextPut: $; ;
+			nextPutAll: proj ;
+			nextPut: $;
+	].
+	stream cr.
+	stream
+		nextPutAll: '         '.
+	self class allProjects do: [ :proj |
+		stream
+			nextPutAll: ';noTest;test'
+	].
+	stream cr.
+
 ]
 
 { #category : #statistics }
