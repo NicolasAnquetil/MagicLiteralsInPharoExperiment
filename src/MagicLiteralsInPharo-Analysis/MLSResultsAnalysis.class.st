@@ -13,6 +13,11 @@ Class {
 	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
 }
 
+{ #category : #'as yet unclassified' }
+MLSResultsAnalysis class >> allProjects [
+	^#( 'morphic' 'parser' 'Pharo' 'PolyMath' 'Roassal' 'Seaside' 'VMMaker' )
+]
+
 { #category : #'instance creation' }
 MLSResultsAnalysis class >> fromOtherAnalysis: analysis [
 	^self new

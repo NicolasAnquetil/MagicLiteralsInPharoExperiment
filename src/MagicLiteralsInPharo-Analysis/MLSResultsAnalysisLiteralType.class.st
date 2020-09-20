@@ -4,11 +4,6 @@ Class {
 	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
 }
 
-{ #category : #'as yet unclassified' }
-MLSResultsAnalysisLiteralType class >> allProjects [
-	^#( 'morphic' 'parser' 'Pharo' 'PolyMath' 'Roassal' 'Seaside' 'VMMaker' )
-]
-
 { #category : #accessing }
 MLSResultsAnalysisLiteralType class >> literalsTypes [
 	^ MLIPDescriptiveAnalysisLiteralTypes literalsTypes
