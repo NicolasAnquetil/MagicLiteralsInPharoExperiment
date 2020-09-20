@@ -14,6 +14,13 @@ Class {
 }
 
 { #category : #'instance creation' }
+MLSResultsAnalysis class >> fromOtherAnalysis: analysis [
+	^self new
+		getFromOtherAnalysis: analysis ;
+		yourself
+]
+
+{ #category : #'instance creation' }
 MLSResultsAnalysis class >> importDirectory: aName [
 	MLSClassExternal resetInstances .
 	MLSMethodExternal resetInstances .
@@ -23,6 +30,27 @@ MLSResultsAnalysis class >> importDirectory: aName [
 { #category : #'instance creation' }
 MLSResultsAnalysis class >> importExpertsBase: aName [
 	^self new importExpertsFromFile: aName
+]
+
+{ #category : #collecting }
+MLSResultsAnalysis >> collectLiteralDescription [
+	^self collectLiteralDescription: self exportedFields withFilter: [ :lit | true ]
+]
+
+{ #category : #collecting }
+MLSResultsAnalysis >> collectLiteralDescription: fieldList withFilter: filterBlock [
+	^(literals select: filterBlock)
+		collect: [ :lit ||desc|
+			desc := Dictionary new: fieldList size.
+			fieldList do: [ :fld || fldBlock |
+				fldBlock := fld value.
+				desc
+					at: fld key
+					put: (fldBlock value: lit)
+			].
+			desc
+		]
+
 ]
 
 { #category : #accessing }
@@ -53,6 +81,11 @@ MLSResultsAnalysis >> experimentForProject: project id: id [
 	^experiments
 		detect: [ :exp | exp project =project and: [ exp experiment = id ] ]
 		ifNone: [ nil ]
+]
+
+{ #category : #accessing }
+MLSResultsAnalysis >> experiments [
+	^experiments
 ]
 
 { #category : #accessing }
@@ -109,12 +142,19 @@ MLSResultsAnalysis >> exportedFields [
 		(#location -> [ :lit | self nodeLocation: lit node]) .
 		(#isConstantMethod -> [ :lit | self isConstantMethod: lit node]) .
 		(#method -> [ :lit | lit method name]) .
+		(#isTestMethod -> [ :lit | lit method isTestMethod]) .
 		(#commentLength -> [:lit | lit commentLength]) .
 		(#nbLiteralsInMethod -> [:lit | lit numberLiteralsInMethod]) .
 		(#project -> [ :lit | lit project ]) .
 		(#expert -> [ :lit | self expertForProject: lit project experiment: lit experimentId ]) .
 		(#expertise -> [ :lit | self expertiseForProject: lit project experiment: lit experimentId ])
 	}
+]
+
+{ #category : #importing }
+MLSResultsAnalysis >> getFromOtherAnalysis: analysis [
+	experiments := analysis experiments.
+	literals := analysis literals
 ]
 
 { #category : #importing }
@@ -201,6 +241,11 @@ MLSResultsAnalysis >> isConstantMethod: aRBNode [
 	[ (aRBNode parent parent class = RBSequenceNode) and:
 	[ (aRBNode parent parent statements size = 1) and:
 	[ aRBNode parent parent parent class = RBMethodNode ] ] ]
+]
+
+{ #category : #accessing }
+MLSResultsAnalysis >> literals [
+	^literals
 ]
 
 { #category : #private }

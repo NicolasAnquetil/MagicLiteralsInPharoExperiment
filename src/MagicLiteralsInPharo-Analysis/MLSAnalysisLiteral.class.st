@@ -5,7 +5,6 @@ Class {
 	#name : #MLSAnalysisLiteral,
 	#superclass : #Object,
 	#instVars : [
-		'value',
 		'status',
 		'mid',
 		'method',
@@ -87,8 +86,8 @@ MLSAnalysisLiteral >> findSerialized: serialized inNodes: literalNodes [
 
 { #category : #initialisation }
 MLSAnalysisLiteral >> fromSerialized: serializedLiteral inMethod: serializedMethod [
-	value := serializedMethod sourceCode
-		copyFrom: serializedLiteral startPosition to: serializedLiteral endPosition.
+	"value := serializedMethod sourceCode
+		copyFrom: serializedLiteral startPosition to: serializedLiteral endPosition."
 	status := serializedLiteral status.
 	serializedMethod
 		compiledMethodIfFound: [ :compiled || allLiterals nodeAndId |
@@ -168,7 +167,7 @@ MLSAnalysisLiteral >> numberLiteralsInMethod [
 
 { #category : #printing }
 MLSAnalysisLiteral >> printOn: aStream [
-		aStream << method name << ' ' << value
+		aStream << method name << ' ' << self value asString
 ]
 
 { #category : #accessing }
@@ -188,5 +187,5 @@ MLSAnalysisLiteral >> status [
 
 { #category : #accessing }
 MLSAnalysisLiteral >> value [
-	^ value
+	^ node value
 ]
