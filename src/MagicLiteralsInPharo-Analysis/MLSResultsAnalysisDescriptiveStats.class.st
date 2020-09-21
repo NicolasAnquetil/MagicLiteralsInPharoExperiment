@@ -28,7 +28,7 @@ MLSResultsAnalysisDescriptiveStats >> csv [
 { #category : #outputting }
 MLSResultsAnalysisDescriptiveStats >> csvHeader: stream [
 	stream
-		nextPutAll: '        ;classes;meths;literals;Tmeths;TLit' ;
+		nextPutAll: '        ;classes;meths;literals;uniqLit;Tmeths;TLit;TUniqLit' ;
 		cr.
 
 ]
@@ -54,8 +54,11 @@ MLSResultsAnalysisDescriptiveStats >> distributionOnLiterals: someLiterals [
 	uniqLit := someLiterals groupedBy: [:lit | lit method -> lit node start].
 	^{ classes size . 
 		methods size . 
+		someLiterals size .
 		uniqLit size . 
 		(methods select: #isTestMethod) size .
-		(uniqLit keys select: [ :lit | lit key isTestMethod ]) size}
+		(someLiterals select: [ :lit | lit method isTestMethod ]) size .
+		(uniqLit keys select: [ :lit | lit key isTestMethod ]) size
+	}
 		
 ]
