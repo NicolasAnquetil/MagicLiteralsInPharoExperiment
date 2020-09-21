@@ -51,7 +51,7 @@ MLSResultsAnalysisDescriptiveStats >> distributionOnLiterals: someLiterals [
 	| methods classes uniqLit|
 	methods := (someLiterals groupedBy: #method) keys.
 	classes := methods groupedBy: [ :m | m methodClass name ].
-	uniqLit := someLiterals groupedBy: [:lit | lit method -> lit node start].
+	uniqLit := self uniqLiterals: someLiterals.
 	^{ classes size . 
 		methods size . 
 		someLiterals size .

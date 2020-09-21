@@ -12,15 +12,14 @@ MLSResultsAnalysisLiteralType class >> literalsTypes [
 { #category : #statistics }
 MLSResultsAnalysisLiteralType >> csv [
 	| distribution |
-	distribution := self distribution.
+	distribution := self distribution asDictionary.
 	^String streamContents:  [ :stream |
 		self csvHeader: stream.
-			self class literalsTypes do: [ :litTyp ||distrib |
-				distrib := distribution at: litTyp name.
+			self class literalsTypes do: [ :litTyp |
 				stream
 					nextPutAll: litTyp name.
 				self class allProjects do: [ :proj ||noTestAndTest|
-					noTestAndTest := distrib at: proj ifAbsent: [ #(0 0 ) ].
+					noTestAndTest := (distribution at: proj) at: litTyp name ifAbsent: [ #(0 0 ) ].
 					stream
 						nextPut: $; ;
 						nextPutAll: noTestAndTest first asString ;
@@ -56,22 +55,30 @@ MLSResultsAnalysisLiteralType >> csvHeader: stream [
 
 { #category : #statistics }
 MLSResultsAnalysisLiteralType >> distribution [
+	^self class allProjects collect: [ :proj |
+		proj -> (self distributionForProject: proj) ]
+
+]
+
+{ #category : #statistics }
+MLSResultsAnalysisLiteralType >> distributionForProject: aProjectName [
+	^self distributionOnLiterals: (self literals select: [ :lit | lit project = aProjectName ])
+]
+
+{ #category : #statistics }
+MLSResultsAnalysisLiteralType >> distributionOnLiterals: someLiterals [
 	| distrib|
 	distrib := Dictionary new: MLIPDescriptiveAnalysisLiteralTypes literalsTypes size.
-	literals do: [ :lit || litType project |
-		litType := distrib
-			at: (self detectLiteralKind: lit)
-			ifAbsentPut: (Dictionary new: self class allProjects size).
-		project := litType
-			at: (lit project)
-			ifAbsent: [ {0 . 0} ].
-		lit method isTestMethod
-			ifTrue: [ project at: 2 put: (project second + 1) ]
-			ifFalse:  [ project at: 1 put: (project first + 1) ].
-		litType
-			at: (lit project)
-			put: project.
-	].
+	(self uniqLiterals: someLiterals)
+		do: [ :lits || lit litType |
+			lit := lits anyOne.
+			litType := distrib
+				at: (self detectLiteralKind: lit)
+				ifAbsentPut: [ {0 . 0} ].
+			lit method isTestMethod
+				ifFalse: [ litType at: 1 put: (litType first + 1) ]
+				ifTrue:  [ litType at: 2 put: (litType second + 1) ].
+		].
 	^distrib
 	
 ]

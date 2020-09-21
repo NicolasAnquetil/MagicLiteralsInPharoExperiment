@@ -4,6 +4,27 @@ Class {
 	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
 }
 
+{ #category : #collecting }
+MLSResultsAnalysisOverlap >> collectLiteralDescription [
+	^self collectLiteralDescription: self exportedFields withFilter: [ :lit | true ]
+]
+
+{ #category : #collecting }
+MLSResultsAnalysisOverlap >> collectLiteralDescription: fieldList withFilter: filterBlock [
+	^(literals select: filterBlock)
+		collect: [ :lit ||desc|
+			desc := Dictionary new: fieldList size.
+			fieldList do: [ :fld || fldBlock |
+				fldBlock := fld value.
+				desc
+					at: fld key
+					put: (fldBlock value: lit)
+			].
+			desc
+		]
+
+]
+
 { #category : #run }
 MLSResultsAnalysisOverlap >> collectOverlaps [
 	^(self collectLiteralDescription

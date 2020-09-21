@@ -37,27 +37,6 @@ MLSResultsAnalysis class >> importExpertsBase: aName [
 	^self new importExpertsFromFile: aName
 ]
 
-{ #category : #collecting }
-MLSResultsAnalysis >> collectLiteralDescription [
-	^self collectLiteralDescription: self exportedFields withFilter: [ :lit | true ]
-]
-
-{ #category : #collecting }
-MLSResultsAnalysis >> collectLiteralDescription: fieldList withFilter: filterBlock [
-	^(literals select: filterBlock)
-		collect: [ :lit ||desc|
-			desc := Dictionary new: fieldList size.
-			fieldList do: [ :fld || fldBlock |
-				fldBlock := fld value.
-				desc
-					at: fld key
-					put: (fldBlock value: lit)
-			].
-			desc
-		]
-
-]
-
 { #category : #accessing }
 MLSResultsAnalysis >> detectASTNode: aLiteral [
 	MLIPDescriptiveAnalysisASTNodes astNodeClasses
@@ -101,59 +80,6 @@ MLSResultsAnalysis >> expertForProject: project experiment: experimentId [
 { #category : #accessing }
 MLSResultsAnalysis >> expertiseForProject: project experiment: experimentId [
 	^(self experimentForProject: project id: experimentId) expertise
-]
-
-{ #category : #exporting }
-MLSResultsAnalysis >> exportToCsvFile: aFilename [
-	 self exportToCsvFile: aFilename withFilter: [ :lit | true ]
-]
-
-{ #category : #exporting }
-MLSResultsAnalysis >> exportToCsvFile: aFilename withFilter: aBlock [
-	aFilename asFileReference writeStreamDo: [ :st |
-		self exportToCsvStream: st withFilter: aBlock
-	]
-]
-
-{ #category : #exporting }
-MLSResultsAnalysis >> exportToCsvStream: stream [
-	self exportToCsvStream: stream withFilter: [ :lit | true ]
-	
-]
-
-{ #category : #exporting }
-MLSResultsAnalysis >> exportToCsvStream: stream withFilter: filterBlock [
-	| csvWriter exportedFields |
-	csvWriter := (NeoCSVWriter on: stream)
-		fieldWriter: #quoted ;
-		yourself.
-	exportedFields := self exportedFields.
-	csvWriter writeHeader: (exportedFields collect: #key).
-	exportedFields do: [ :fieldToExport | csvWriter addField: fieldToExport value ].
-	(literals select: filterBlock)
-		do: [ :lit | csvWriter nextPut: lit ]
-		displayingProgress: 'CSV export'
-	
-]
-
-{ #category : #exporting }
-MLSResultsAnalysis >> exportedFields [
-	^{
-		(#literal -> [ :lit | lit value asString]) .
-		(#kind -> [ :lit | self detectLiteralKind: lit ]) .
-		(#astNode -> [ :lit | self detectASTNode: lit ]) .
-		(#status -> [ :lit | lit status ]) .
-		(#idInMethod -> [ :lit | lit idInMethod]) .
-		(#location -> [ :lit | self nodeLocation: lit node]) .
-		(#isConstantMethod -> [ :lit | self isConstantMethod: lit node]) .
-		(#method -> [ :lit | lit method name]) .
-		(#isTestMethod -> [ :lit | lit method isTestMethod]) .
-		(#commentLength -> [:lit | lit commentLength]) .
-		(#nbLiteralsInMethod -> [:lit | lit numberLiteralsInMethod]) .
-		(#project -> [ :lit | lit project ]) .
-		(#expert -> [ :lit | self expertForProject: lit project experiment: lit experimentId ]) .
-		(#expertise -> [ :lit | self expertiseForProject: lit project experiment: lit experimentId ])
-	}
 ]
 
 { #category : #importing }
@@ -266,4 +192,9 @@ MLSResultsAnalysis >> stonToSerializedSample: aStream [
 		next
 			fixStonErrors ;
 			yourself
+]
+
+{ #category : #private }
+MLSResultsAnalysis >> uniqLiterals: someLiterals [
+	^ someLiterals groupedBy: [:lit | lit method -> lit node start]
 ]
