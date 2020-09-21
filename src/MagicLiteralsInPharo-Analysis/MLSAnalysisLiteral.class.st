@@ -136,6 +136,11 @@ MLSAnalysisLiteral >> isIntegerLiteral [
 ]
 
 { #category : #testing }
+MLSAnalysisLiteral >> isMagic [
+	^ self status isMagic
+]
+
+{ #category : #testing }
 MLSAnalysisLiteral >> isNilLiteral [
 	^self value isNil
 ]

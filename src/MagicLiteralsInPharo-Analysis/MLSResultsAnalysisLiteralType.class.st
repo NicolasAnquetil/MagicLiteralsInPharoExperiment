@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+MLSResultsAnalysisLiteralType class >> allProjects [
+	^super allProjects reject: [:proj | proj = 'parser']
+]
+
+{ #category : #accessing }
 MLSResultsAnalysisLiteralType class >> literalsTypes [
 	^ MLIPDescriptiveAnalysisLiteralTypes literalsTypes
 ]
@@ -18,13 +23,13 @@ MLSResultsAnalysisLiteralType >> csv [
 			self class literalsTypes do: [ :litTyp |
 				stream
 					nextPutAll: litTyp name.
-				self class allProjects do: [ :proj ||noTestAndTest|
-					noTestAndTest := (distribution at: proj) at: litTyp name ifAbsent: [ #(0 0 ) ].
+				self class allProjects do: [ :proj || magicOrNot |
+					magicOrNot := (distribution at: proj) at: litTyp name ifAbsent: [ #(0 0 ) ].
 					stream
 						nextPut: $; ;
-						nextPutAll: noTestAndTest first asString ;
+						nextPutAll: magicOrNot first asString ;
 						nextPut: $; ;
-						nextPutAll: noTestAndTest second asString
+						nextPutAll: magicOrNot second asString
 				].
 				stream cr
 			].
@@ -47,7 +52,7 @@ MLSResultsAnalysisLiteralType >> csvHeader: stream [
 		nextPutAll: '         '.
 	self class allProjects do: [ :proj |
 		stream
-			nextPutAll: ';noTest;test'
+			nextPutAll: ';ok;magic'
 	].
 	stream cr.
 
@@ -69,13 +74,12 @@ MLSResultsAnalysisLiteralType >> distributionForProject: aProjectName [
 MLSResultsAnalysisLiteralType >> distributionOnLiterals: someLiterals [
 	| distrib|
 	distrib := Dictionary new: MLIPDescriptiveAnalysisLiteralTypes literalsTypes size.
-	(self uniqLiterals: someLiterals)
-		do: [ :lits || lit litType |
-			lit := lits anyOne.
+	someLiterals
+		do: [ :lit || litType |
 			litType := distrib
 				at: (self detectLiteralKind: lit)
 				ifAbsentPut: [ {0 . 0} ].
-			lit method isTestMethod
+			lit isMagic
 				ifFalse: [ litType at: 1 put: (litType first + 1) ]
 				ifTrue:  [ litType at: 2 put: (litType second + 1) ].
 		].

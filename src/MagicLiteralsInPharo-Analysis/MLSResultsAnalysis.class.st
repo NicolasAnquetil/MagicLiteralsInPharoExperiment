@@ -13,7 +13,7 @@ Class {
 	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 MLSResultsAnalysis class >> allProjects [
 	^#( 'morphic' 'parser' 'Pharo' 'PolyMath' 'Roassal' 'Seaside' 'VMMaker' )
 ]
