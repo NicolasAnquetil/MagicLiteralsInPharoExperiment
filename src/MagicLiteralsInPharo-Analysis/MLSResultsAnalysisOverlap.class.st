@@ -25,7 +25,7 @@ MLSResultsAnalysisOverlap >> collectLiteralDescription: fieldList withFilter: fi
 
 ]
 
-{ #category : #run }
+{ #category : #collecting }
 MLSResultsAnalysisOverlap >> collectOverlaps [
 	^(self collectLiteralDescription
 		groupedBy: [ :d | (d at: #method) -> (d at: #idInMethod)])
@@ -33,7 +33,7 @@ MLSResultsAnalysisOverlap >> collectOverlaps [
 	
 ]
 
-{ #category : #run }
+{ #category : #API }
 MLSResultsAnalysisOverlap >> conflictingOverlaps [
 	| over |
 	over := self collectOverlaps.
@@ -44,7 +44,7 @@ MLSResultsAnalysisOverlap >> conflictingOverlaps [
 
 ]
 
-{ #category : #run }
+{ #category : #API }
 MLSResultsAnalysisOverlap >> conflictingOverlapsExpertise [
 	| over |
 	over := self collectOverlaps.
@@ -57,7 +57,7 @@ MLSResultsAnalysisOverlap >> conflictingOverlapsExpertise [
 		]
 ]
 
-{ #category : #run }
+{ #category : #API }
 MLSResultsAnalysisOverlap >> statsOverlaps [
 	| over |
 	over := self collectOverlaps

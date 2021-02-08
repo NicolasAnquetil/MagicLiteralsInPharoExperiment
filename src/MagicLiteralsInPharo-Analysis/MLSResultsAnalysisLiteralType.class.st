@@ -14,7 +14,7 @@ MLSResultsAnalysisLiteralType class >> literalsTypes [
 	^ MLIPDescriptiveAnalysisLiteralTypes literalsTypes
 ]
 
-{ #category : #statistics }
+{ #category : #API }
 MLSResultsAnalysisLiteralType >> csv [
 	| distribution |
 	distribution := self distribution asDictionary.
@@ -37,7 +37,7 @@ MLSResultsAnalysisLiteralType >> csv [
 	]
 ]
 
-{ #category : #statistics }
+{ #category : #outputting }
 MLSResultsAnalysisLiteralType >> csvHeader: stream [
 	stream
 		nextPutAll: '         '.

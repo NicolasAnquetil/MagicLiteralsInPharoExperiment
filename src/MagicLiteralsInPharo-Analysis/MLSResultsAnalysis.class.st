@@ -1,7 +1,12 @@
 "
 A class to load ston files resulting from experiments and export them in CSV for analysis in R
 
-MLSResultsAnalysis importDirectory: '/path/to/directory'
+First need to load the data
+```
+   MLSResultsAnalysis importDirectory: '/path/to/directory'
+```
+
+Then see API category for methods to call
 "
 Class {
 	#name : #MLSResultsAnalysis,

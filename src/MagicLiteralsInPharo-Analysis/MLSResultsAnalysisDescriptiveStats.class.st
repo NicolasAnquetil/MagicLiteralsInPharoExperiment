@@ -1,10 +1,16 @@
+"
+Descriptive Statistics analysis
+
+API:
+- #csv -- output result of analysis in csv format
+"
 Class {
 	#name : #MLSResultsAnalysisDescriptiveStats,
 	#superclass : #MLSResultsAnalysis,
 	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
 }
 
-{ #category : #outputting }
+{ #category : #API }
 MLSResultsAnalysisDescriptiveStats >> csv [
 	| distribution |
 	distribution := (self distribution) asDictionary.
