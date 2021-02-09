@@ -5,11 +5,20 @@ Class {
 }
 
 { #category : #testing }
-MLIPTargetToMessageLiteralFilter >> isNotMagicLiteral: literalNode [
+MLIPTargetToMessageLiteralFilter >> isNotMagicLiteral: literal [
 	| rbNode |
-	rbNode := literalNode node.
+	(self isTarget: literal) ifFalse: [ ^false "i.e. might be magical" ].
+
+	rbNode := literal node.
 	^ (self literalValidationBlock value: rbNode) and: [ 
 		rbNode parent isMessage and: [ 
-			rbNode parent receiver = rbNode and: [ 
-				rbNode parent selector = self selector ] ] ]
+			 
+				rbNode parent selector = self selector ] ]
+]
+
+{ #category : #testing }
+MLIPTargetToMessageLiteralFilter >> isTarget: literal [
+	"literal is argument of a message send"
+	^(super isTarget: literal)
+		and: [ literal node parent receiver = literal node ]
 ]

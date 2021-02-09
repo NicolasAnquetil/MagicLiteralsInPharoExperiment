@@ -12,3 +12,8 @@ MLIPDirectlyAssignedFilter >> isNotMagicLiteral: literalNode [
 	^ (parents copyFrom: assignmentIndex + 1 to: parents size - 1)
 		allSatisfy: [ :node | node isLiteralArray ]
 ]
+
+{ #category : #testing }
+MLIPDirectlyAssignedFilter >> isTarget: literal [
+	^true
+]

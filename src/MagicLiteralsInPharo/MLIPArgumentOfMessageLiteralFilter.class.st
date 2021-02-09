@@ -32,15 +32,22 @@ MLIPArgumentOfMessageLiteralFilter >> expectedIndex: anObject [
 ]
 
 { #category : #testing }
-MLIPArgumentOfMessageLiteralFilter >> isNotMagicLiteral: literalNode [
-	| indexOfArgument rbNode |
-	rbNode := literalNode node.
-	indexOfArgument := rbNode parent isMessage
-								ifTrue: [ rbNode parent arguments indexOf: rbNode ]
-								ifFalse: [ -1 "Same value as if #indexOf: found nothing." ].
-	^ (self literalValidationBlock value: rbNode) and: [ 
-		(self expectedIndex isNil or: [ self expectedIndex = indexOfArgument ]) and: [
-			rbNode parent isMessage and: [ 
-				rbNode parent receiver ~= rbNode and: [ 
-					rbNode parent selector = self selector ] ] ] ]
+MLIPArgumentOfMessageLiteralFilter >> isNotMagicLiteral: literal [
+	| rbNode |
+	(self isTarget: literal) ifFalse: [ ^false "i.e. might be magical" ].
+
+	rbNode := literal node.	
+	(self literalValidationBlock value: rbNode)
+		ifFalse: [^false].
+	(self expectedIndex isNil or: [ self expectedIndex = (rbNode parent arguments indexOf: rbNode) ])
+		 ifFalse: [^false].
+	^rbNode parent selector = self selector
+
+]
+
+{ #category : #testing }
+MLIPArgumentOfMessageLiteralFilter >> isTarget: literal [
+	"literal is argument of a message send"
+	^(super isTarget: literal)
+		and: [ literal node parent arguments includes: literal node ]
 ]

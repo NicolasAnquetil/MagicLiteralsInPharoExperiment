@@ -77,3 +77,10 @@ MLIPCompositeMagicLiteralFilter >> isNotMagicLiteral: literalNode [
 		filter isNotMagicLiteral: literalNode
 	]
 ]
+
+{ #category : #testing }
+MLIPCompositeMagicLiteralFilter >> isTarget: literal [
+	^ self filters anySatisfy: [ :filter |
+		filter isTarget: literal
+	]
+]

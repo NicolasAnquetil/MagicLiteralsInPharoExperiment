@@ -8,3 +8,8 @@ Class {
 MLIPLiteralInLiteralArrayFilter >> isNotMagicLiteral: literalNode [
 	^ literalNode node parent isLiteralArray
 ]
+
+{ #category : #testing }
+MLIPLiteralInLiteralArrayFilter >> isTarget: literal [
+	^true
+]

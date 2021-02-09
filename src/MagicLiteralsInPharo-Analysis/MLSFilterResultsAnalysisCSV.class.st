@@ -1,3 +1,6 @@
+"
+Outputs MLSResultsAnalysisAutomaticHeuristic with CSV formatting of raw data: number of magic/nonMagic/...
+"
 Class {
 	#name : #MLSFilterResultsAnalysisCSV,
 	#superclass : #MLSFilterResultsAnalysis,

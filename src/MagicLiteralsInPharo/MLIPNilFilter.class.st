@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #testing }
-MLIPNilFilter >> isNotMagicLiteral: literalNode [
-	^  literalNode value isNil
+MLIPNilFilter >> isNotMagicLiteral: literal [
+	^self isTarget: literal
+]
+
+{ #category : #testing }
+MLIPNilFilter >> isTarget: literal [
+	^  literal value isNil
 ]

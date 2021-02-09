@@ -24,6 +24,11 @@ MLIPAbstractMessageLiteralFilter class >> selector: aSymbol literalValue: anObje
 		yourself
 ]
 
+{ #category : #testing }
+MLIPAbstractMessageLiteralFilter >> isTarget:  literal [
+	^literal node parent isMessage
+]
+
 { #category : #accessing }
 MLIPAbstractMessageLiteralFilter >> literalType: aClass [
 	self literalValidationBlock: [ :astNode | astNode value isKindOf: aClass ]

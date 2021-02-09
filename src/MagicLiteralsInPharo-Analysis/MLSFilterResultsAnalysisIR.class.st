@@ -1,11 +1,14 @@
+"
+Outputs MLSResultsAnalysisAutomaticHeuristic with Information Retrieval metrics: precision/recall/F
+"
 Class {
-	#name : #MLSFilterResultsAnalysisRecPrec,
+	#name : #MLSFilterResultsAnalysisIR,
 	#superclass : #MLSFilterResultsAnalysis,
 	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
 }
 
 { #category : #output }
-MLSFilterResultsAnalysisRecPrec >> outputResult: values [
+MLSFilterResultsAnalysisIR >> outputResult: values [
 	| truePositives falsePositives rec prec f |
 	truePositives := (self allNotMagic: values) intersection: (self filteredNotMagic: values).
 	falsePositives := (self filteredMagic: values) , (self filteredUndecided: values).

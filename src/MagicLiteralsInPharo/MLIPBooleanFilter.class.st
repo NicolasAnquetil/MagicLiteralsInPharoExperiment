@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #testing }
-MLIPBooleanFilter >> isNotMagicLiteral: literalNode [
-	^(literalNode value = true) or: [literalNode value = false]
+MLIPBooleanFilter >> isNotMagicLiteral: literal [
+	^(self isTarget: literal) and: [
+		(literal value = true) or:
+		[literal value = false]
+	]
+]
+
+{ #category : #testing }
+MLIPBooleanFilter >> isTarget: literal [
+	^literal isBooleanLiteral
 ]

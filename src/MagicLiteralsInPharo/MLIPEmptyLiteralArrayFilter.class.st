@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #testing }
-MLIPEmptyLiteralArrayFilter >> isNotMagicLiteral: literalNode [
-	^ literalNode node isLiteralArray and: [ literalNode node contents isEmpty ]
+MLIPEmptyLiteralArrayFilter >> isNotMagicLiteral: literal [
+	^ (self isTarget: literal) and: [ literal node contents isEmpty ]
+]
+
+{ #category : #testing }
+MLIPEmptyLiteralArrayFilter >> isTarget: literal [
+	^literal node isLiteralArray
 ]
