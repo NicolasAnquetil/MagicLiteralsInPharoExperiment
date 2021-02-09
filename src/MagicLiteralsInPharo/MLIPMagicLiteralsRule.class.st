@@ -1,7 +1,7 @@
 Class {
 	#name : #MLIPMagicLiteralsRule,
 	#superclass : #ReNodeBasedRule,
-	#category : #MagicLiteralsInPharo
+	#category : #'MagicLiteralsInPharo-Core'
 }
 
 { #category : #testing }
