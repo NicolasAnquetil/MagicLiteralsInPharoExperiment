@@ -1,6 +1,6 @@
 Class {
 	#name : #MLIPArgumentOfMessageLiteralFilter,
-	#superclass : #MLIPTargetToMessageLiteralFilter,
+	#superclass : #MLIPAbstractMessageLiteralFilter,
 	#instVars : [
 		'expectedIndex'
 	],
