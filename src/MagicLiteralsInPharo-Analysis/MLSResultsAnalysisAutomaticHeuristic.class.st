@@ -10,6 +10,8 @@ Computes efficiency of heuristics to detect non-magic literals
 	results.
 ```
 
+Look at methods in the 'configuration' and 'API' protocols
+
 Instance variables:
 - output -- strategy to output the result, available through #csvOutput and #recprecOutput
 - filter -- what kind of literals to experiment on (eg `#filter: #isStringLiteral`)
@@ -101,6 +103,11 @@ MLSResultsAnalysisAutomaticHeuristic >> irOutput [
 ]
 
 { #category : #configuration }
+MLSResultsAnalysisAutomaticHeuristic >> literalInMessageHeuristics [
+	self heuristic: MLIPCompositeMagicLiteralFilter withLiteralsInMessagFilters
+]
+
+{ #category : #configuration }
 MLSResultsAnalysisAutomaticHeuristic >> noLiteralFilter [
 	self filter: [ :e | true ]
 ]
@@ -113,11 +120,6 @@ MLSResultsAnalysisAutomaticHeuristic >> output [
 { #category : #accessing }
 MLSResultsAnalysisAutomaticHeuristic >> output: anObject [
 	output := anObject
-]
-
-{ #category : #configuration }
-MLSResultsAnalysisAutomaticHeuristic >> recprecOutput [
-	output := MLSFilterResultsAnalysisIR new
 ]
 
 { #category : #private }

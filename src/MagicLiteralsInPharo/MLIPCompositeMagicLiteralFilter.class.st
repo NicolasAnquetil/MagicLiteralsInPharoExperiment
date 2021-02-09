@@ -44,6 +44,23 @@ MLIPCompositeMagicLiteralFilter class >> withDefaultFilters [
 		(#(#nextPutAll: #<< #name:) collect: [ :selector | MLIPArgumentOfMessageLiteralFilter selector: selector literalType: String ])
 ]
 
+{ #category : #'instance creation' }
+MLIPCompositeMagicLiteralFilter class >> withLiteralsInMessagFilters [
+	^ self filters: { 
+		MLIPArgumentOfMessageLiteralFilter selector: #extent:depth:fromArray:offset: literalType: ByteArray index: 3.
+		MLIPArgumentOfMessageLiteralFilter selector: #+ literalValue: 1 index: 1.
+		MLIPArgumentOfMessageLiteralFilter selector: #- literalValue: 1 index: 1.
+		MLIPArgumentOfMessageLiteralFilter selector: #ffiCall: literalType: Array index: 1.
+		MLIPArgumentOfMessageLiteralFilter selector: #ffiCall:module:options: literalType: Array index: 1.
+		MLIPArgumentOfMessageLiteralFilter selector: #ffiCall:options: literalType: Array index: 1 }
+		,
+		(#(#to: #to:by: #to:do: #timesRepeat:) collect: [ :selector | MLIPTargetToMessageLiteralFilter selector: selector literalType: Integer ])
+		,
+		(#(#nextPut: #<<) collect: [ :selector | MLIPArgumentOfMessageLiteralFilter selector: selector literalType: Character ])
+		,
+		(#(#nextPutAll: #<< #name:) collect: [ :selector | MLIPArgumentOfMessageLiteralFilter selector: selector literalType: String ])
+]
+
 { #category : #adding }
 MLIPCompositeMagicLiteralFilter >> addAllFilters: aCollectionOfFilters [
 	self filters addAll: aCollectionOfFilters
