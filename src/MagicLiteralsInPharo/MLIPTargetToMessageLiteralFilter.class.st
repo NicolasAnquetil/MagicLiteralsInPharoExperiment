@@ -26,10 +26,12 @@ MLIPTargetToMessageLiteralFilter class >> selector: aSymbol literalValue: anObje
 
 { #category : #testing }
 MLIPTargetToMessageLiteralFilter >> isNotMagicLiteral: literalNode [
-	^ (self literalValidationBlock value: literalNode) and: [ 
-		literalNode parent isMessage and: [ 
-			literalNode parent receiver = literalNode and: [ 
-				literalNode parent selector = self selector ] ] ]
+	| rbNode |
+	rbNode := literalNode node.
+	^ (self literalValidationBlock value: rbNode) and: [ 
+		rbNode parent isMessage and: [ 
+			rbNode parent receiver = rbNode and: [ 
+				rbNode parent selector = self selector ] ] ]
 ]
 
 { #category : #accessing }

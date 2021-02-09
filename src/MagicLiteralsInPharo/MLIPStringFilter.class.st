@@ -39,7 +39,7 @@ MLIPStringFilter >> defaultKnownWordsRatioThreshold [
 
 { #category : #testing }
 MLIPStringFilter >> isNotMagicLiteral: literalNode [
-	^ literalNode class = RBLiteralValueNode
+	^ literalNode node class = RBLiteralValueNode
 		and: [ literalNode value isString
 				and: [ literalNode value isEmpty
 						or: [ literalNode value size > 3 and: [ (literalNode value mlipKnownWordsRatioWith: self trie) > self knownWordsRatioThreshold ] ] ] ]

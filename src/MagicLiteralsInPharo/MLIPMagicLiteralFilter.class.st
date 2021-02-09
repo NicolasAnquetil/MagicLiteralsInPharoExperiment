@@ -1,3 +1,10 @@
+"
+Filter to decide if a literal is magic
+
+call #isNotMagicLiteral: on the literal to test
+
+see subclasses, particularly MLIPCompositeMagicLiteralFilter
+"
 Class {
 	#name : #MLIPMagicLiteralFilter,
 	#superclass : #Object,

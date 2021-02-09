@@ -3,10 +3,7 @@ A MLIPSymbolFilterTest is a test class for testing the behavior of MLIPSymbolFil
 "
 Class {
 	#name : #MLIPSymbolFilterTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'filter'
-	],
+	#superclass : #MLIPFiltersTest,
 	#category : #'MagicLiteralsInPharo-Tests-Filters'
 }
 
@@ -18,8 +15,8 @@ MLIPSymbolFilterTest >> setUp [
 
 { #category : #test }
 MLIPSymbolFilterTest >> testIsNotMagicLiteral [
-	self assert: (filter isNotMagicLiteral: (RBLiteralValueNode value: #anySymbol)).
-	self assert: (filter isNotMagicLiteral: (RBLiteralValueNode value: #anySymbol:)).
+	self assert: (self filterNode: (RBLiteralValueNode value: #anySymbol)).
+	self assert: (self filterNode: (RBLiteralValueNode value: #anySymbol:)).
 	
-	self deny: (filter isNotMagicLiteral: (RBLiteralValueNode value: 42)).
+	self deny: (self filterNode: (RBLiteralValueNode value: 42)).
 ]

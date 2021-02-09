@@ -3,10 +3,7 @@ A MLIPNilFilterTest is a test class for testing the behavior of MLIPNilFilter
 "
 Class {
 	#name : #MLIPNilFilterTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'filter'
-	],
+	#superclass : #MLIPFiltersTest,
 	#category : #'MagicLiteralsInPharo-Tests-Filters'
 }
 
@@ -18,9 +15,9 @@ MLIPNilFilterTest >> setUp [
 
 { #category : #test }
 MLIPNilFilterTest >> testIsNotMagicLiteral [
-	self assert: (filter isNotMagicLiteral: (RBLiteralValueNode value: nil)).
+	self assert: (self filterNode: (RBLiteralValueNode value: nil)).
 	
-	self deny: (filter isNotMagicLiteral: (RBLiteralValueNode value: 42)).
+	self deny: (self filterNode: (RBLiteralValueNode value: 42)).
 	
-	self deny: (filter isNotMagicLiteral: (RBLiteralValueNode value: true)).
+	self deny: (self filterNode: (RBLiteralValueNode value: true)).
 ]

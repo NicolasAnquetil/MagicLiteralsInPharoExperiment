@@ -7,6 +7,8 @@ First need to load the data
 ```
 
 Then see API category for methods to call
+
+class side #fromOtherAnalysis: allows one analysis (sub-classes) to use the database of another one without re-importing it
 "
 Class {
 	#name : #MLSResultsAnalysis,

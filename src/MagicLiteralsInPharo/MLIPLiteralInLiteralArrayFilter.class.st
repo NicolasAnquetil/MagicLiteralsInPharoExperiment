@@ -6,5 +6,5 @@ Class {
 
 { #category : #testing }
 MLIPLiteralInLiteralArrayFilter >> isNotMagicLiteral: literalNode [
-	^ literalNode parent isLiteralArray
+	^ literalNode node parent isLiteralArray
 ]

@@ -6,5 +6,5 @@ Class {
 
 { #category : #testing }
 MLIPPragmaArgumentFilter >> isNotMagicLiteral: literalNode [
-	^ literalNode parent isPragma
+	^ literalNode node parent isPragma
 ]

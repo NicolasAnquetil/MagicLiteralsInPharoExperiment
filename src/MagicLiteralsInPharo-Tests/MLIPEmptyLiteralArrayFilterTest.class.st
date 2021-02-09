@@ -3,10 +3,7 @@ A MLIPEmptyLiteralArrayFilterTest is a test class for testing the behavior of ML
 "
 Class {
 	#name : #MLIPEmptyLiteralArrayFilterTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'filter'
-	],
+	#superclass : #MLIPFiltersTest,
 	#category : #'MagicLiteralsInPharo-Tests-Filters'
 }
 
@@ -18,9 +15,9 @@ MLIPEmptyLiteralArrayFilterTest >> setUp [
 
 { #category : #test }
 MLIPEmptyLiteralArrayFilterTest >> testIsNotMagicLiteral [
-	self assert: (filter isNotMagicLiteral: (RBLiteralArrayNode value: #())).
+	self assert: (self filterNode: (RBLiteralArrayNode value: #())).
 	
-	self deny: (filter isNotMagicLiteral: (RBLiteralArrayNode value: #(1 2 3))).
+	self deny: (self filterNode: (RBLiteralArrayNode value: #(1 2 3))).
 	
-	self deny: (filter isNotMagicLiteral: (RBLiteralValueNode value: 42))
+	self deny: (self filterNode: (RBLiteralValueNode value: 42))
 ]

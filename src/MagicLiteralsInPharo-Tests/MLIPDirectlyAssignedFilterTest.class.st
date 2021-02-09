@@ -3,10 +3,7 @@ A MLIPDirectlyAssignedFilterTest is a test class for testing the behavior of MLI
 "
 Class {
 	#name : #MLIPDirectlyAssignedFilterTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'filter'
-	],
+	#superclass : #MLIPFiltersTest,
 	#category : #'MagicLiteralsInPharo-Tests-Filters'
 }
 
@@ -23,7 +20,7 @@ MLIPDirectlyAssignedFilterTest >> testIsNotMagicLiteral [
 	x := #((42))'.
 	literalNode := methodAst body statements first value contents first contents first.
 	
-	self assert: (filter isNotMagicLiteral: literalNode)
+	self assert: (self filterNode: literalNode)
 ]
 
 { #category : #test }
@@ -33,7 +30,7 @@ MLIPDirectlyAssignedFilterTest >> testIsNotMagicLiteral2 [
 	x := 42'.
 	literalNode := methodAst body statements first value.
 	
-	self assert: (filter isNotMagicLiteral: literalNode)
+	self assert: (self filterNode: literalNode)
 ]
 
 { #category : #test }
@@ -45,5 +42,5 @@ MLIPDirectlyAssignedFilterTest >> testIsNotMagicLiteral3 [
 	
 	self assert: literalArray size equals: 4.
 	literalArray do: [ :literalNode |
-		self assert: (filter isNotMagicLiteral: literalNode) ]
+		self assert: (self filterNode: literalNode) ]
 ]

@@ -6,5 +6,5 @@ Class {
 
 { #category : #testing }
 MLIPBooleanFilter >> isNotMagicLiteral: literalNode [
-	^  literalNode class = RBLiteralValueNode and: [ #(true false) includes: literalNode value ]
+	^(literalNode value = true) or: [literalNode value = false]
 ]

@@ -3,10 +3,7 @@ A MLIPBooleanFilterTest is a test class for testing the behavior of MLIPBooleanF
 "
 Class {
 	#name : #MLIPBooleanFilterTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'filter'
-	],
+	#superclass : #MLIPFiltersTest,
 	#category : #'MagicLiteralsInPharo-Tests-Filters'
 }
 
@@ -18,8 +15,8 @@ MLIPBooleanFilterTest >> setUp [
 
 { #category : #test }
 MLIPBooleanFilterTest >> testIsNotMagicLiteral [
-	self assert: (filter isNotMagicLiteral: (RBLiteralValueNode value: true)).
-	self assert: (filter isNotMagicLiteral: (RBLiteralValueNode value: false)).
+	self assert: (self filterNode: (RBLiteralValueNode value: true)).
+	self assert: (self filterNode: (RBLiteralValueNode value: false)).
 	
-	self deny: (filter isNotMagicLiteral: (RBLiteralValueNode value: 42)).
+	self deny: (self filterNode: (RBLiteralValueNode value: 42)).
 ]

@@ -146,6 +146,11 @@ MLSAnalysisLiteral >> isNilLiteral [
 ]
 
 { #category : #testing }
+MLSAnalysisLiteral >> isNotMagic [
+	^ self status isNotMagic
+]
+
+{ #category : #testing }
 MLSAnalysisLiteral >> isStringLiteral [
 	^(self value isString) and: [ self value isSymbol not ]
 ]
@@ -153,6 +158,11 @@ MLSAnalysisLiteral >> isStringLiteral [
 { #category : #testing }
 MLSAnalysisLiteral >> isSymbolLiteral [
 	^self value isSymbol
+]
+
+{ #category : #testing }
+MLSAnalysisLiteral >> isUnknown [
+	^ self status isUnknown
 ]
 
 { #category : #accessing }
@@ -163,6 +173,11 @@ MLSAnalysisLiteral >> method [
 { #category : #accessing }
 MLSAnalysisLiteral >> node [
 	^node
+]
+
+{ #category : #accessing }
+MLSAnalysisLiteral >> node: aRBNode [
+	node := aRBNode
 ]
 
 { #category : #accessing }

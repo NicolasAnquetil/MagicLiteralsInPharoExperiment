@@ -1,3 +1,8 @@
+"
+A filter composed of other filters
+
+See: MLIPCompositeMagicLiteralFilter class >> #withDefaultFilters
+"
 Class {
 	#name : #MLIPCompositeMagicLiteralFilter,
 	#superclass : #MLIPMagicLiteralFilter,
@@ -68,5 +73,7 @@ MLIPCompositeMagicLiteralFilter >> initialize [
 
 { #category : #testing }
 MLIPCompositeMagicLiteralFilter >> isNotMagicLiteral: literalNode [
-	^ self filters anySatisfy: [ :filter | filter isNotMagicLiteral: literalNode ]
+	^ self filters anySatisfy: [ :filter |
+		filter isNotMagicLiteral: literalNode
+	]
 ]

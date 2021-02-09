@@ -3,10 +3,7 @@ A MLIPPragmaArgumentFilterTest is a test class for testing the behavior of MLIPP
 "
 Class {
 	#name : #MLIPPragmaArgumentFilterTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'filter'
-	],
+	#superclass : #MLIPFiltersTest,
 	#category : #'MagicLiteralsInPharo-Tests-Filters'
 }
 
@@ -23,5 +20,5 @@ MLIPPragmaArgumentFilterTest >> testIsNotMagicLiteral [
 	pragmaNode := RBPragmaNode selector: #foo: arguments: literalNode.
 	literalNode parent: pragmaNode.
 	
-	self assert: (filter isNotMagicLiteral: literalNode)
+	self assert: (self filterNode: literalNode)
 ]

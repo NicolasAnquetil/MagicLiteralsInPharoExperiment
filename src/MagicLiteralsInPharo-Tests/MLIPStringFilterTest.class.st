@@ -3,10 +3,7 @@ A MLIPStringFilterTest is a test class for testing the behavior of MLIPStringFil
 "
 Class {
 	#name : #MLIPStringFilterTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'filter'
-	],
+	#superclass : #MLIPFiltersTest,
 	#category : #'MagicLiteralsInPharo-Tests-Filters'
 }
 
@@ -18,11 +15,11 @@ MLIPStringFilterTest >> setUp [
 
 { #category : #test }
 MLIPStringFilterTest >> testIsNotMagicLiteral [
-	self assert: (filter isNotMagicLiteral: (RBLiteralNode value: 'Hello you')).
+	self assert: (self filterNode: (RBLiteralNode value: 'Hello you')).
 	
-	self assert: (filter isNotMagicLiteral: (RBLiteralNode value: 'Hello?!')).
+	self assert: (self filterNode: (RBLiteralNode value: 'Hello?!')).
 	
-	self deny: (filter isNotMagicLiteral: (RBLiteralNode value: 'deqdqdqw')).
+	self deny: (self filterNode: (RBLiteralNode value: 'deqdqdqw')).
 	
-	self deny: (filter isNotMagicLiteral: (RBLiteralNode value: 'Hello  dqdww wwdwee'))
+	self deny: (self filterNode: (RBLiteralNode value: 'Hello  dqdww wwdwee'))
 ]
