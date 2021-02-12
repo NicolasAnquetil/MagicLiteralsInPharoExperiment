@@ -80,6 +80,11 @@ MLSResultsAnalysis >> experiments [
 ]
 
 { #category : #accessing }
+MLSResultsAnalysis >> experiments: aCollection [
+	experiments := aCollection 
+]
+
+{ #category : #accessing }
 MLSResultsAnalysis >> expertForProject: project experiment: experimentId [
 	^(self experimentForProject: project id: experimentId) expert
 ]
@@ -87,6 +92,27 @@ MLSResultsAnalysis >> expertForProject: project experiment: experimentId [
 { #category : #accessing }
 MLSResultsAnalysis >> expertiseForProject: project experiment: experimentId [
 	^(self experimentForProject: project id: experimentId) expertise
+]
+
+{ #category : #exporting }
+MLSResultsAnalysis >> exportedFields [
+	^{
+		(#literal -> [ :lit | lit value asString]) .
+		(#kind -> [ :lit | self detectLiteralKind: lit ]) .
+		(#astNode -> [ :lit | self detectASTNode: lit ]) .
+		(#status -> [ :lit | lit status ]) .
+		(#idInMethod -> [ :lit | lit idInMethod]) .
+		"(#location -> [ :lit | self nodeLocation: lit node]) ."
+		(#isConstantMethod -> [ :lit | self isConstantMethod: lit node]) .
+		(#method -> [ :lit | lit method name]) .
+		(#isTestMethod -> [ :lit | lit method isTestMethod]) .
+		(#commentLength -> [:lit | lit commentLength]) .
+		(#nbLiteralsInMethod -> [:lit | lit numberLiteralsInMethod]) .
+		(#project -> [ :lit | lit project ]) .
+		(#expId -> [ :lit | lit experimentId ]) .
+		(#expert -> [ :lit | self expertForProject: lit project experiment: lit experimentId ]) .
+		(#expertise -> [ :lit | self expertiseForProject: lit project experiment: lit experimentId ])
+	}
 ]
 
 { #category : #importing }
@@ -184,6 +210,11 @@ MLSResultsAnalysis >> isConstantMethod: aRBNode [
 { #category : #accessing }
 MLSResultsAnalysis >> literals [
 	^literals
+]
+
+{ #category : #accessing }
+MLSResultsAnalysis >> literals: aCollection [
+	literals := aCollection 
 ]
 
 { #category : #private }
