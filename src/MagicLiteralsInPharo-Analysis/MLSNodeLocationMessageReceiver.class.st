@@ -1,7 +1,7 @@
 Class {
 	#name : #MLSNodeLocationMessageReceiver,
 	#superclass : #MLSAbstractNodeLocation,
-	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
+	#category : #'MagicLiteralsInPharo-Analysis-NodeInAST'
 }
 
 { #category : #converting }

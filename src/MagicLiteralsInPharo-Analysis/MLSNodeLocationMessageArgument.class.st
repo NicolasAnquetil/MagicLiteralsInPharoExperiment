@@ -1,5 +1,5 @@
 Class {
 	#name : #MLSNodeLocationMessageArgument,
 	#superclass : #MLSAbstractNodeLocation,
-	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
+	#category : #'MagicLiteralsInPharo-Analysis-NodeInAST'
 }

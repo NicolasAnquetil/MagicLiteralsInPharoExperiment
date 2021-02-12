@@ -1,7 +1,7 @@
 Class {
 	#name : #MLSNodeLocationBinaryArgument,
 	#superclass : #MLSNodeLocationMessageArgument,
-	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
+	#category : #'MagicLiteralsInPharo-Analysis-NodeInAST'
 }
 
 { #category : #converting }

@@ -16,7 +16,7 @@ Class {
 	#instVars : [
 		'targetNode'
 	],
-	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
+	#category : #'MagicLiteralsInPharo-Analysis-NodeInAST'
 }
 
 { #category : #'instance creation' }

@@ -10,7 +10,7 @@ Class {
 		'expert',
 		'expertise'
 	],
-	#category : #'MagicLiteralsInPharo-Analysis-ExperimentResult'
+	#category : #'MagicLiteralsInPharo-Analysis-Entities'
 }
 
 { #category : #'instance creation' }
